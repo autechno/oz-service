@@ -1,0 +1,19 @@
+server:
+  port: 8102
+spring:
+  servlet:
+    multipart:
+      location: /Users/autech/upload_tmp
+      max-file-size: 20MB
+      max-request-size: 22MB
+  main:
+    allow-circular-references: true
+
+logging:
+  config: classpath:logback.xml
+  level:
+    root: info
+
+#wallet:
+#  path: wallet
+#  suffix: .unk
