@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import {Common} from "./library/Common.sol";
 import {IERC20} from "./library/IERC20.sol";
 import {Ownable} from "./library/Ownable.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
 
 interface IUSDT {
     function balanceOf(address account) external view returns (uint256);
@@ -30,12 +31,17 @@ contract WalletContract {
     bool public paused = false;
 
     // 初始化时设置主合约为 owner
-    constructor(address _owner) {
+//    constructor(address _owner) {
+//        owner = _owner;
+//    }
+    function initialize(address _owner) external {
+        require(owner == address(0), "Already initialized");
         owner = _owner;
     }
 
     // 接收ETH的回调函数
     receive() external payable {}
+    fallback() external payable {}
     
     modifier onlyOwner() {
         require(msg.sender == owner, "not owner!");
@@ -72,6 +78,7 @@ contract WalletContract {
 // 主合约
 contract WalletManagerContract is Ownable {
     // 记录已部署的子合约
+    address private logicAddress;
     address payable[] private userWallets;//用户钱包
     address payable private collectWallet;//归集钱包
     address payable private withDrawWallet;//提币钱包
@@ -79,9 +86,10 @@ contract WalletManagerContract is Ownable {
     address[] private tokenContracts;
 
     function generateWallet() internal returns (address payable) {
-        WalletContract subContract = new WalletContract(address(this));
-        address _addr = address(subContract);
-        return payable(_addr);
+        address proxy = Clones.clone(logicAddress);
+        address payable _addr = payable(proxy);
+        WalletContract(_addr).initialize(address(this));
+        return _addr;
     }
 
     // 批量生成新的用户合约
@@ -285,6 +293,7 @@ contract WalletManagerContract is Ownable {
     }
 
     constructor () Ownable(msg.sender) {
+        logicAddress = address(new WalletContract());
         tokenContracts.push(0x19c0947b0E1169C00854CaF563E20D742C462eE6);//usdt
         tokenContracts.push(0xAb104736299169E3a252E32e49D6f30273832734);//ozc
         tokenContracts.push(0x544d4e0CC6C1cd0d319f3ceB2a8Dbba1B4dE9Dd2);//toto

@@ -1,5 +1,6 @@
 package com.aucloud.pojo;
 
+import com.aucloud.constant.ResultCodeEnum;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -41,6 +42,13 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> returnResult(Integer code) {
         return new Result<>(code);
+    }
+
+    public static <T> Result<T> returnResult(ResultCodeEnum resultCodeEnum) {
+        return new Result<>(resultCodeEnum.getCode());
+    }
+    public static <T> Result<T> returnResult(ResultCodeEnum resultCodeEnum, T data) {
+        return new Result<>(resultCodeEnum.getCode(), resultCodeEnum.getLabel_zh_cn(), data);
     }
 
     public static <T> Result<T> error(String message, Integer exceptionCode) {

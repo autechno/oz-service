@@ -1,0 +1,26 @@
+server:
+  port: 8083
+spring:
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
+  main:
+    allow-circular-references: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#feign:
+#  httpclient:
+#    connection-timeout: 20000
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 20000
+#        readTimeout: 8000
+#logging:
+#  config: classpath:logback.xml
+#  level:
+#    root: info

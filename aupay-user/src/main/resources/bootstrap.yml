@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: service-user
+  cloud:
+    nacos:
+      server-addr: 172.31.32.173:8848
+      username: ozpay
+      password: auTech20240606
+      discovery:
+        namespace: cd029db4-52e7-4e92-8130-6ef1df8a5452
+      config:
+        namespace: cd029db4-52e7-4e92-8130-6ef1df8a5452
+        refresh-enabled: true
+        file-extension: yml
+        shared-configs:
+          - data-id: common-db.yml
+            refresh: true
+          - data-id: common-redis.yml
+            refresh: true
+          - data-id: common-rabbitmq.yml
+            refresh: true
+        import-check:
+          enabled: false
+  profiles:
+    active: test

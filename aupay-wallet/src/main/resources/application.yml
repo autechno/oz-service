@@ -1,0 +1,30 @@
+server:
+  port: 8084
+spring:
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
+  main:
+    allow-circular-references: true
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
+feign:
+  httpclient:
+    connection-timeout: 20000
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 8000
+
+logging:
+  config: classpath:logback.xml
+  level:
+    root: info
+#    com.baomidou.mybatisplus: debug
+#    com.aucloud.aupay.dao.mapper: debug

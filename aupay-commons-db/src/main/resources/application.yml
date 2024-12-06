@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.253:3306/aupay3?characterEncoding=utf8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+    username: oz_system
+    password: auTech20240606
+    hikari:
+      connection-test-query: select 1
+      validation-timeout: 10000
+      minimum-idle: 10
+      maximum-pool-size: 20
+      idle-timeout: 600000

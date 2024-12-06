@@ -9,7 +9,8 @@
         <version>3.0</version>
     </parent>
 
-    <artifactId>commons</artifactId>
+    <groupId>com.aucloud.aupay</groupId>
+    <artifactId>aupay-user</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -19,22 +20,28 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
         <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>2.0.53</version>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.aucloud</groupId>
+            <artifactId>commons</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aucloud.aupay</groupId>
+            <artifactId>aupay-commons-db</artifactId>
+            <version>3.0</version>
+        </dependency>
     </dependencies>
 
 </project>

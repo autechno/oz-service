@@ -1,5 +1,6 @@
 package com.aucloud.exception;
 
+import com.aucloud.constant.ResultCodeEnum;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +13,9 @@ public class ServiceRuntimeException extends RuntimeException {
 
     public ServiceRuntimeException(String message) {
         super(message);
+    }
+    public ServiceRuntimeException(ResultCodeEnum codeEnum) {
+        this(codeEnum.getLabel_zh_cn(), codeEnum.getCode());
     }
 
     public ServiceRuntimeException(String message, Integer exceptionCode) {
