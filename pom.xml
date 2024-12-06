@@ -21,6 +21,8 @@
         <module>aupay-trade</module>
         <module>aupay-commons-db</module>
         <module>aupay-user</module>
+        <module>aupay-admin</module>
+        <module>aupay-operate</module>
     </modules>
 
     <properties>
