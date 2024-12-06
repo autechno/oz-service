@@ -15,11 +15,11 @@
     <!-- 按照每天生成日志文件 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 日志文件的路径 -->
-        <file>${LOG_HOME}/wallet.log</file>
+        <file>${LOG_HOME}/aupay-trade.log</file>
         <!-- 滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志文件的命名模式，%d{yyyy-MM-dd}表示按天滚动 -->
-            <fileNamePattern>${LOG_HOME}/bak/wallet.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/bak/aupay-trade.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- 保留的历史日志文件数 -->
             <maxHistory>7</maxHistory>
         </rollingPolicy>
