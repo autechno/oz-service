@@ -8,12 +8,11 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * <p>
- * 链上交易流水表
+ * 账号链上钱包表
  * </p>
  *
  * @author yang.li@autech.one
@@ -22,10 +21,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("wallet_transfer_record")
-public class WalletTransferRecord implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@TableName("acount_chain_wallet")
+public class AcountChainWallet implements Serializable {
 
     /**
      * 主键id
@@ -34,34 +31,14 @@ public class WalletTransferRecord implements Serializable {
     private Integer id;
 
     /**
-     * 交易流水
+     * 账户id
      */
-    private String tradeNo;
+    private Integer acountId;
 
     /**
-     * 交易类型
+     * 账户类型
      */
-    private Integer tradeType;
-
-    /**
-     * 转出地址
-     */
-    private String fromAddress;
-
-    /**
-     * 转入地址
-     */
-    private String toAddress;
-
-    /**
-     * 交易hash
-     */
-    private String txHash;
-
-    /**
-     * 币种
-     */
-    private Integer currencyId;
+    private Integer acountType;
 
     /**
      * 链
@@ -69,29 +46,29 @@ public class WalletTransferRecord implements Serializable {
     private Integer currencyChain;
 
     /**
-     * 交易额
+     * 钱包地址
      */
-    private BigDecimal amount;
+    private String walletAddress;
 
     /**
-     * 交易费用
+     * 用户钱包池子id
      */
-    private BigDecimal fee;
+    private Integer walletPoolId;
 
     /**
-     * 状态
+     * 是否删除
      */
-    private Integer status;
+    private Integer del;
 
     /**
-     * 创建交易时间
+     * 创建时间
      */
     private Date createTime;
 
     /**
-     * 完成时间
+     * 更新时间
      */
-    private Date finishTime;
+    private Date updateTime;
 
 
 }

@@ -1,16 +1,18 @@
 package com.aucloud.eth.controller;
 
+import com.aucloud.constant.CurrencyEnum;
 import com.aucloud.constant.ResultCodeEnum;
 import com.aucloud.entity.TxInfo;
+import com.aucloud.eth.contracts.WalletManagerContract;
+import com.aucloud.eth.service.AupayWalletManagerService;
 import com.aucloud.pojo.Result;
 import com.aucloud.eth.service.RpcService;
 import com.aucloud.eth.service.ScanTransactionService;
 import com.aucloud.eth.service.TransferService;
+import com.aucloud.pojo.dto.WithdrawBatchDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -25,6 +27,8 @@ public class IndexController {
     private TransferService transferService;
     @Autowired
     private ScanTransactionService scanTransactionService;
+    @Autowired
+    private AupayWalletManagerService aupayWalletManagerService;
 
 //    @RequestMapping("createWallet")
 //    public Result<String> createWallet() {
@@ -62,12 +66,19 @@ public class IndexController {
 
     @RequestMapping("getBalance")
     public Result<BigDecimal> getBalance(@RequestParam("address") String address,@RequestParam("currencyId") Integer currencyId) throws Exception {
-        BigDecimal balance = rpcService.getERC20Balance(address, currencyId);
+        CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
+        BigDecimal balance = aupayWalletManagerService.getWalletBalance(address, currencyEnum);
         log.info("getBalance. address:{} currencyId:{} . balance {}", address, currencyId, balance);
         if (balance == null) {
             throw new RuntimeException("查询余额失败");
         }
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),balance);
+    }
+
+    @PostMapping("withdrawBatch")
+    public Result<String> withdrawBatch(@RequestBody WithdrawBatchDto dto) throws Exception {
+        String txHash = aupayWalletManagerService.withdrawBatch(dto);
+        return Result.returnResult(ResultCodeEnum.SUCCESS,txHash);
     }
 
     @RequestMapping("")

@@ -21,6 +21,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.aucloud</groupId>
+            <artifactId>commons</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aucloud.aupay</groupId>
+            <artifactId>aupay-commons-db</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -32,16 +43,17 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.aucloud</groupId>
-            <artifactId>commons</artifactId>
-            <version>3.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.aucloud.aupay</groupId>
-            <artifactId>aupay-commons-db</artifactId>
-            <version>3.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
     </dependencies>

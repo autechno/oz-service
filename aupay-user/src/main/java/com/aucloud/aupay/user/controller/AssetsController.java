@@ -3,6 +3,7 @@ package com.aucloud.aupay.user.controller;
 import com.aucloud.aupay.user.service.AssetsService;
 import com.aucloud.constant.ResultCodeEnum;
 import com.aucloud.pojo.Result;
+import com.aucloud.pojo.dto.AcountRechargeDTO;
 import com.aucloud.pojo.dto.WithdrawDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +22,11 @@ public class AssetsController {
     public Result<String> preDeduct(@RequestBody WithdrawDTO withdrawDTO) {
         String tradeNo = assetsService.preDeduct(withdrawDTO);
         return Result.returnResult(ResultCodeEnum.SUCCESS, tradeNo);
+    }
+
+    @PostMapping("recharge")
+    public Result<?> recharge(@RequestBody AcountRechargeDTO dto) {
+        assetsService.recharge(dto);
+        return Result.returnResult(ResultCodeEnum.SUCCESS);
     }
 }
