@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "aupay-user")
 public interface FeignUserService {
 
-    @PostMapping("/assets/pre-deduct")
+    @PostMapping("/withdraw/pre-deduct")
     Result<String> assetsPreDeduct(@RequestBody WithdrawDTO withdrawDTO);
 }

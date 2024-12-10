@@ -104,6 +104,7 @@ contract WalletManagerContract {
         address proxy = Clones.clone(logicAddress);
         address payable _addr = payable(proxy);
         WalletContract(_addr).initialize(address(this));
+//        address payable _addr = payable(address(0));
         return _addr;
     }
 
@@ -312,7 +313,7 @@ contract WalletManagerContract {
         uint count = userWallets.length - _startIndexIncloud;
         address payable[] memory userAddr = new address payable[] (count);
         for (uint i = _startIndexIncloud; i< userWallets.length; i ++) {
-            userAddr.push(userWallets[i]);
+            userAddr[i - _startIndexIncloud] = userWallets[i];
         }
         return userAddr;
     }

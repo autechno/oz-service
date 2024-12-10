@@ -3,14 +3,12 @@ package com.aucloud.aupay.wallet.service;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.aucloud.aupay.wallet.feign.FeignUserService;
-import com.aucloud.aupay.wallet.orm.po.AcountChainWallet;
+import com.aucloud.aupay.wallet.orm.constant.TradeType;
+import com.aucloud.aupay.wallet.orm.po.AccountChainWallet;
 import com.aucloud.aupay.wallet.orm.po.WalletTransferRecord;
 import com.aucloud.aupay.wallet.orm.service.AcountChainWalletService;
 import com.aucloud.aupay.wallet.orm.service.WalletTransferRecordService;
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.QueueConstant;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.constant.TradeType;
+import com.aucloud.constant.*;
 import com.aucloud.pojo.Result;
 import com.aucloud.pojo.dto.AcountRechargeDTO;
 import com.aucloud.pojo.dto.RechargeDTO;
@@ -61,7 +59,7 @@ public class RechargeService {
             CurrencyEnum currencyId = rechargeDTO.getCurrencyId();
             CurrencyEnum.CurrencyChainEnum currencyChain = rechargeDTO.getCurrencyChain();
 
-            AcountChainWallet acountChainWallet = acountChainWalletService.getById(walletId);
+            AccountChainWallet acountChainWallet = acountChainWalletService.getById(walletId);
 
             log.info("recharge getWalletById:{}", JSON.toJSONString(acountChainWallet));
             //此次根据currencyid判断不出来
@@ -83,9 +81,9 @@ public class RechargeService {
             record.setCurrencyId(currencyId.id);
             record.setCreateTime(new Date());
             record.setTxHash(txId);
-            record.setTradeType(TradeType.RECHARGE.getCode());
+            record.setTradeType(TradeType.RECHARGE);
             record.setFee(BigDecimal.ZERO);
-            record.setStatus(0);
+            record.setStatus(WalletTransferStatus.SUCCESS);
             record.setTradeNo(tradeNo);
             record.setFinishTime(new Date());
 
@@ -99,7 +97,7 @@ public class RechargeService {
             log.info("recharge state success. publishEvent RabbitMqMessage USER_RECHARGE_DEAL");
             Result<?> recharged = feignUserService.recharge(dto);
             if (recharged == null || recharged.getCode() != ResultCodeEnum.SUCCESS.getCode()) {
-                record.setStatus(0);
+                record.setStatus(WalletTransferStatus.EXCEPTION);
             }
             walletTransferRecordService.save(record);
         } catch (Exception e) {

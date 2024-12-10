@@ -1,5 +1,6 @@
 package com.aucloud.aupay.wallet.orm.po;
 
+import com.aucloud.aupay.wallet.orm.constant.TradeType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -41,7 +42,7 @@ public class WalletTransferRecord implements Serializable {
     /**
      * 交易类型
      */
-    private Integer tradeType;
+    private TradeType tradeType;
 
     /**
      * 转出地址

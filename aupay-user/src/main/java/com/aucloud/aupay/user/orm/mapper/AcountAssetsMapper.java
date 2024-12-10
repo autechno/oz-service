@@ -1,6 +1,6 @@
 package com.aucloud.aupay.user.orm.mapper;
 
-import com.aucloud.aupay.user.orm.po.AcountAssets;
+import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yang.li@autech.one
  * @since 2024-12-06
  */
-public interface AcountAssetsMapper extends BaseMapper<AcountAssets> {
+public interface AcountAssetsMapper extends BaseMapper<AccountAssets> {
 
 }

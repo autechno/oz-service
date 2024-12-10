@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,7 +24,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("acount_assets_record")
-public class AcountAssetsRecord implements Serializable {
+public class AccountAssetsRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -80,12 +82,12 @@ public class AcountAssetsRecord implements Serializable {
     /**
      * 交易创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 完成时间
      */
-    private LocalDateTime finishTime;
+    private Date finishTime;
 
 
 }

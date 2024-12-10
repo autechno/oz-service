@@ -3,7 +3,6 @@ package com.aucloud.eth.contracts;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -11,7 +10,6 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
@@ -29,9 +27,7 @@ import org.web3j.tx.gas.ContractGasProvider;
  */
 @SuppressWarnings("rawtypes")
 public class IUSDT extends Contract {
-    public static final String BINARY = "";
-
-    private static String librariesLinkedBinary;
+    public static final String BINARY = "Bin file was not provided";
 
     public static final String FUNC_ALLOWANCE = "allowance";
 
@@ -118,39 +114,5 @@ public class IUSDT extends Contract {
     public static IUSDT load(String contractAddress, Web3j web3j,
             TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
         return new IUSDT(contractAddress, web3j, transactionManager, contractGasProvider);
-    }
-
-    public static RemoteCall<IUSDT> deploy(Web3j web3j, Credentials credentials,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IUSDT.class, web3j, credentials, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IUSDT> deploy(Web3j web3j, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IUSDT.class, web3j, credentials, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static RemoteCall<IUSDT> deploy(Web3j web3j, TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IUSDT.class, web3j, transactionManager, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IUSDT> deploy(Web3j web3j, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IUSDT.class, web3j, transactionManager, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static void linkLibraries(List<Contract.LinkReference> references) {
-        librariesLinkedBinary = linkBinaryWithReferences(BINARY, references);
-    }
-
-    private static String getDeploymentBinary() {
-        if (librariesLinkedBinary != null) {
-            return librariesLinkedBinary;
-        } else {
-            return BINARY;
-        }
     }
 }

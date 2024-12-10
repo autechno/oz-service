@@ -36,10 +36,12 @@ public enum CurrencyEnum {
         this.minRechargeAmount = minRechargeAmount;
     }
 
-    public static CurrencyEnum findById(Integer id){
+    public static CurrencyEnum findById(Integer id) {
         CurrencyEnum[] currencyEnums = CurrencyEnum.values();
-        for(CurrencyEnum currencyEnum : currencyEnums){
-            if(currencyEnum.id.equals(id)) return currencyEnum;
+        for (CurrencyEnum currencyEnum : currencyEnums) {
+            if (currencyEnum.id.equals(id)) {
+                return currencyEnum;
+            }
         }
         return null;
     }

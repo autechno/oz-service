@@ -18,7 +18,6 @@ import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.BaseEventResponse;
@@ -38,10 +37,8 @@ import org.web3j.tx.gas.ContractGasProvider;
  * <p>Generated with web3j version 4.12.1.
  */
 @SuppressWarnings("rawtypes")
-public class IOZCoin extends Contract {
-    public static final String BINARY = "";
-
-    private static String librariesLinkedBinary;
+public class IOzCoin extends Contract {
+    public static final String BINARY = "Bin file was not provided";
 
     public static final String FUNC_ALLOWANCE = "allowance";
 
@@ -68,23 +65,23 @@ public class IOZCoin extends Contract {
     ;
 
     @Deprecated
-    protected IOZCoin(String contractAddress, Web3j web3j, Credentials credentials,
+    protected IOzCoin(String contractAddress, Web3j web3j, Credentials credentials,
             BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    protected IOZCoin(String contractAddress, Web3j web3j, Credentials credentials,
+    protected IOzCoin(String contractAddress, Web3j web3j, Credentials credentials,
             ContractGasProvider contractGasProvider) {
         super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
     @Deprecated
-    protected IOZCoin(String contractAddress, Web3j web3j, TransactionManager transactionManager,
+    protected IOzCoin(String contractAddress, Web3j web3j, TransactionManager transactionManager,
             BigInteger gasPrice, BigInteger gasLimit) {
         super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    protected IOZCoin(String contractAddress, Web3j web3j, TransactionManager transactionManager,
+    protected IOzCoin(String contractAddress, Web3j web3j, TransactionManager transactionManager,
             ContractGasProvider contractGasProvider) {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
@@ -232,59 +229,25 @@ public class IOZCoin extends Contract {
     }
 
     @Deprecated
-    public static IOZCoin load(String contractAddress, Web3j web3j, Credentials credentials,
+    public static IOzCoin load(String contractAddress, Web3j web3j, Credentials credentials,
             BigInteger gasPrice, BigInteger gasLimit) {
-        return new IOZCoin(contractAddress, web3j, credentials, gasPrice, gasLimit);
+        return new IOzCoin(contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
     @Deprecated
-    public static IOZCoin load(String contractAddress, Web3j web3j,
+    public static IOzCoin load(String contractAddress, Web3j web3j,
             TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return new IOZCoin(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+        return new IOzCoin(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    public static IOZCoin load(String contractAddress, Web3j web3j, Credentials credentials,
+    public static IOzCoin load(String contractAddress, Web3j web3j, Credentials credentials,
             ContractGasProvider contractGasProvider) {
-        return new IOZCoin(contractAddress, web3j, credentials, contractGasProvider);
+        return new IOzCoin(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static IOZCoin load(String contractAddress, Web3j web3j,
+    public static IOzCoin load(String contractAddress, Web3j web3j,
             TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new IOZCoin(contractAddress, web3j, transactionManager, contractGasProvider);
-    }
-
-    public static RemoteCall<IOZCoin> deploy(Web3j web3j, Credentials credentials,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IOZCoin.class, web3j, credentials, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IOZCoin> deploy(Web3j web3j, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IOZCoin.class, web3j, credentials, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static RemoteCall<IOZCoin> deploy(Web3j web3j, TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IOZCoin.class, web3j, transactionManager, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IOZCoin> deploy(Web3j web3j, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IOZCoin.class, web3j, transactionManager, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static void linkLibraries(List<Contract.LinkReference> references) {
-        librariesLinkedBinary = linkBinaryWithReferences(BINARY, references);
-    }
-
-    private static String getDeploymentBinary() {
-        if (librariesLinkedBinary != null) {
-            return librariesLinkedBinary;
-        } else {
-            return BINARY;
-        }
+        return new IOzCoin(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public static class Permit extends StaticStruct {

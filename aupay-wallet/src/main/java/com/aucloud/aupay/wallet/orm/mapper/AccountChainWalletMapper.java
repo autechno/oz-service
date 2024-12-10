@@ -1,6 +1,6 @@
 package com.aucloud.aupay.wallet.orm.mapper;
 
-import com.aucloud.aupay.wallet.orm.po.AcountChainWallet;
+import com.aucloud.aupay.wallet.orm.po.AccountChainWallet;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yang.li@autech.one
  * @since 2024-12-06
  */
-public interface AcountChainWalletMapper extends BaseMapper<AcountChainWallet> {
+public interface AccountChainWalletMapper extends BaseMapper<AccountChainWallet> {
 
 }

@@ -16,6 +16,7 @@ public interface QueueConstant {
 //    String SUPPLEMENT_TRANSFER_FEE = "supplement_transfer_fee";
 
     String CHECK_USER_ASSETS = "check_user_assets";//资金归集 用户->中转
+    String USER_TO_TRANSFER = "user_to_transfer_";//资金归集 用户->中转
 //    String CHECK_USER_ASSETS_TRANSFER_SYNC_STATE = "check_user_assets_transfer_sync_state";
 
 //    String COLLECT_USER_ASSETS_PRE = "collect_user_assets_pre";
@@ -32,4 +33,6 @@ public interface QueueConstant {
 
     String WITHDRAW_COMPLATE = "withdraw_complate";
     String WITHDRAW_FAIL = "withdraw_fail";
+
+    String AFTER_GAS_TRANSFER = "after_gas_transfer";
 }

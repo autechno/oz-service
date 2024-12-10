@@ -1,4 +1,4 @@
-package com.aucloud.aupay.wallet.orm.po;
+package com.aucloud.aupay.user.orm.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,11 +8,12 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * <p>
- * 账号链上钱包表
+ * 账户资产表
  * </p>
  *
  * @author yang.li@autech.one
@@ -21,8 +22,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("acount_chain_wallet")
-public class AcountChainWallet implements Serializable {
+@TableName("account_assets")
+public class AccountAssets implements Serializable {
 
     /**
      * 主键id
@@ -33,37 +34,27 @@ public class AcountChainWallet implements Serializable {
     /**
      * 账户id
      */
-    private Integer acountId;
+    private Integer accountId;
 
     /**
      * 账户类型
      */
-    private Integer acountType;
+    private Integer accountType;
 
     /**
-     * 链
+     * 币种
      */
-    private Integer currencyChain;
+    private Integer currencyId;
 
     /**
-     * 钱包地址
+     * 余额
      */
-    private String walletAddress;
+    private BigDecimal balance;
 
     /**
-     * 用户钱包池子id
+     * 冻结余额
      */
-    private Integer walletPoolId;
-
-    /**
-     * 是否删除
-     */
-    private Integer del;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+    private BigDecimal freezeBalance;
 
     /**
      * 更新时间

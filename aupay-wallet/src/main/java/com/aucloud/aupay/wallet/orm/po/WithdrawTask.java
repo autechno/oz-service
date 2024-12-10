@@ -93,5 +93,10 @@ public class WithdrawTask implements Serializable {
      */
     private String remark;
 
+    /**
+     * 失败次数
+     */
+    private Integer failedTimes;
+
 
 }

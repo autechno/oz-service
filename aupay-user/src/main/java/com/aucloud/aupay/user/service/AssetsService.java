@@ -1,7 +1,7 @@
 package com.aucloud.aupay.user.service;
 
-import com.aucloud.aupay.user.orm.po.AcountAssets;
-import com.aucloud.aupay.user.orm.po.AcountAssetsRecord;
+import com.aucloud.aupay.user.orm.po.AccountAssets;
+import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
 import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
 import com.aucloud.aupay.user.orm.service.AcountAssetsService;
 import com.aucloud.constant.ResultCodeEnum;
@@ -25,10 +25,10 @@ public class AssetsService {
     private AcountAssetsRecordService acountAssetsRecordService;
 
     public String preDeduct(WithdrawDTO withdrawDTO) {
-        AcountAssets acountAssets = acountAssetsService.lambdaQuery()
-                .eq(AcountAssets::getAcountId, withdrawDTO.getAccountId())
-                .eq(AcountAssets::getAcountType, withdrawDTO.getAccountType())
-                .eq(AcountAssets::getCurrencyId, withdrawDTO.getCurrencyId())
+        AccountAssets acountAssets = acountAssetsService.lambdaQuery()
+                .eq(AccountAssets::getAcountId, withdrawDTO.getAccountId())
+                .eq(AccountAssets::getAcountType, withdrawDTO.getAccountType())
+                .eq(AccountAssets::getCurrencyId, withdrawDTO.getCurrencyId())
                 .oneOpt().orElseGet(() -> createNewAssets(withdrawDTO.getAccountId(), withdrawDTO.getAccountType(), withdrawDTO.getCurrencyId()));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
         BigDecimal amount = withdrawDTO.getAmount();
@@ -44,7 +44,7 @@ public class AssetsService {
         acountAssetsService.saveOrUpdate(acountAssets);
 
         String tradeNo = UUID.randomUUID().toString();
-        AcountAssetsRecord acountAssetsRecord = new AcountAssetsRecord();
+        AccountAssetsRecord acountAssetsRecord = new AccountAssetsRecord();
         acountAssetsRecord.setAssetsId(acountAssets.getId());
         acountAssetsRecord.setTradeNo(tradeNo);
         acountAssetsRecord.setAmount(amount);
@@ -59,16 +59,16 @@ public class AssetsService {
     }
 
     public void recharge(AcountRechargeDTO dto) {
-        AcountAssets acountAssets = acountAssetsService.lambdaQuery()
-                .eq(AcountAssets::getAcountId, dto.getAccountId())
-                .eq(AcountAssets::getAcountType, dto.getAccountType())
-                .eq(AcountAssets::getCurrencyId, dto.getCurrencyEnum().id)
+        AccountAssets acountAssets = acountAssetsService.lambdaQuery()
+                .eq(AccountAssets::getAcountId, dto.getAccountId())
+                .eq(AccountAssets::getAcountType, dto.getAccountType())
+                .eq(AccountAssets::getCurrencyId, dto.getCurrencyEnum().id)
                 .oneOpt().orElseGet(() -> createNewAssets(dto.getAccountId(), dto.getAccountType(), dto.getCurrencyEnum().id));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
         acountAssets.setBalance(balance.add(dto.getAmount()));
         acountAssetsService.saveOrUpdate(acountAssets);
 
-        AcountAssetsRecord acountAssetsRecord = new AcountAssetsRecord();
+        AccountAssetsRecord acountAssetsRecord = new AccountAssetsRecord();
         acountAssetsRecord.setAssetsId(acountAssets.getId());
         acountAssetsRecord.setTradeNo(dto.getTradeNo());
         acountAssetsRecord.setAmount(dto.getAmount());
@@ -81,12 +81,27 @@ public class AssetsService {
         acountAssetsRecordService.save(acountAssetsRecord);
     }
 
-    private AcountAssets createNewAssets(Integer accountId, Integer accountType, Integer currencyId) {
-        AcountAssets acountAssets = new AcountAssets();
+    private AccountAssets createNewAssets(Integer accountId, Integer accountType, Integer currencyId) {
+        AccountAssets acountAssets = new AccountAssets();
         acountAssets.setAcountId(accountId);
         acountAssets.setAcountType(accountType);
         acountAssets.setCurrencyId(currencyId);
         acountAssets.setUpdateTime(new Date());
         return acountAssets;
+    }
+
+    public void withdrawFinish(String tradeNo) {
+        AccountAssetsRecord acountAssetsRecord = acountAssetsRecordService.lambdaQuery().eq(AccountAssetsRecord::getTradeNo, tradeNo).oneOpt().orElseThrow();
+        acountAssetsRecord.setStatus(0);
+        acountAssetsRecord.setFinishTime(new Date());
+        acountAssetsRecordService.updateById(acountAssetsRecord);
+        Integer assetsId = acountAssetsRecord.getAssetsId();
+        BigDecimal amount = acountAssetsRecord.getAmount() == null ? BigDecimal.ZERO : acountAssetsRecord.getAmount();
+        BigDecimal fee = acountAssetsRecord.getFee() == null ? BigDecimal.ZERO : acountAssetsRecord.getFee();
+        AccountAssets assets = acountAssetsService.getById(assetsId);
+        BigDecimal freezeBalance = assets.getFreezeBalance() == null ? BigDecimal.ZERO : assets.getFreezeBalance();
+        assets.setFreezeBalance(freezeBalance.subtract(amount).subtract(fee));
+        assets.setUpdateTime(new Date());
+        acountAssetsService.updateById(assets);
     }
 }
