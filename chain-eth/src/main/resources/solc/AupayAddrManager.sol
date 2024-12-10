@@ -3,25 +3,25 @@ pragma solidity ^0.8.20;
 
 import {Common} from "./library/Common.sol";
 import {IERC20} from "./library/IERC20.sol";
-import {Ownable} from "./library/Ownable.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
 
 interface IUSDT {
     function balanceOf(address account) external view returns (uint256);
     function transfer(address recipient, uint256 amount) external;
 }
 
-struct WithdrawMeta {
-    address payable toAddr;
-    uint amount;
-}
-struct CollectMeta {
-    address token;
-    uint limit;
-}
-struct TokenBalance {
-    address token;
-    uint balance;
-}
+    struct WithdrawMeta {
+        address payable toAddr;
+        uint amount;
+    }
+    struct CollectMeta {
+        address token;
+        uint limit;
+    }
+    struct TokenBalance {
+        address token;
+        uint balance;
+    }
 
 // 子合约
 contract WalletContract {
@@ -30,13 +30,18 @@ contract WalletContract {
     bool public paused = false;
 
     // 初始化时设置主合约为 owner
-    constructor(address _owner) {
+//    constructor(address _owner) {
+//        owner = _owner;
+//    }
+    function initialize(address _owner) external {
+        require(owner == address(0), "Already initialized");
         owner = _owner;
     }
 
     // 接收ETH的回调函数
     receive() external payable {}
-    
+    fallback() external payable {}
+
     modifier onlyOwner() {
         require(msg.sender == owner, "not owner!");
         _;
@@ -70,18 +75,36 @@ contract WalletContract {
 }
 
 // 主合约
-contract WalletManagerContract is Ownable {
+contract WalletManagerContract {
+
+    address private _owner;
+
     // 记录已部署的子合约
+    address private logicAddress;
     address payable[] private userWallets;//用户钱包
     address payable private collectWallet;//归集钱包
     address payable private withDrawWallet;//提币钱包
 
     address[] private tokenContracts;
 
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    modifier onlyOwner() {
+        require(msg.sender == _owner, "not owner!");
+        _;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        address oldOwner = _owner;
+        _owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
     function generateWallet() internal returns (address payable) {
-        WalletContract subContract = new WalletContract(address(this));
-        address _addr = address(subContract);
-        return payable(_addr);
+        address proxy = Clones.clone(logicAddress);
+        address payable _addr = payable(proxy);
+        WalletContract(_addr).initialize(address(this));
+        return _addr;
     }
 
     // 批量生成新的用户合约
@@ -182,11 +205,15 @@ contract WalletManagerContract is Ownable {
 
     //转储
     function collect2storage(address payable storageWallet, CollectMeta[] memory collectMatas) external onlyOwner {
-        transferTo(collectWallet, storageWallet, collectMatas);
+        for (uint i = 0; i < collectMatas.length; i++) {
+            transfer(collectWallet, storageWallet, collectMatas[i].token, collectMatas[i].limit);
+        }
     }
     //补充提币钱包
     function collect2withdraw(CollectMeta[] memory collectMatas) external onlyOwner {
-        transferTo(collectWallet, withDrawWallet, collectMatas);
+        for (uint i = 0; i < collectMatas.length; i++) {
+            transfer(collectWallet, withDrawWallet, collectMatas[i].token, collectMatas[i].limit);
+        }
     }
 
     //归集
@@ -249,6 +276,24 @@ contract WalletManagerContract is Ownable {
         }
     }
 
+    function transfer(
+        address payable fromWallet,
+        address payable toWallet,
+        address token,
+        uint amount
+    ) internal {
+        WalletContract wallet = WalletContract(fromWallet);
+        if (token == Common.ETH_SIGN_ADDR) {
+            uint balance = fromWallet.balance;
+            require(balance > 0 && balance >= amount, "Insufficient balance");
+            wallet.withdraw(toWallet, amount);
+        } else {
+            uint balance = IERC20(token).balanceOf(fromWallet);
+            require(balance > 0 && balance >= amount, "Insufficient balance");
+            wallet.withdrawToken(token, toWallet, amount);
+        }
+    }
+
     // 销毁指定子合约
     function destroyWallet(address payable wallet) internal {
         WalletContract(wallet).destroy();
@@ -257,6 +302,19 @@ contract WalletManagerContract is Ownable {
     // 获取所有用户钱包地址
     function getUserWallets() external onlyOwner view returns (address payable[] memory) {
         return userWallets;
+    }
+    // 获取所有用户钱包地址
+    function getUserWalletsNumbers() external onlyOwner view returns (uint) {
+        return userWallets.length;
+    }
+    // 获取所有用户钱包地址
+    function getSubUserWallets(uint _startIndexIncloud) external onlyOwner view returns (address payable[] memory) {
+        uint count = userWallets.length - _startIndexIncloud;
+        address payable[] memory userAddr = new address payable[] (count);
+        for (uint i = _startIndexIncloud; i< userWallets.length; i ++) {
+            userAddr.push(userWallets[i]);
+        }
+        return userAddr;
     }
     // 获取归集钱包地址
     function getCollectWallet() external onlyOwner view returns (address payable) {
@@ -284,7 +342,10 @@ contract WalletManagerContract is Ownable {
         }
     }
 
-    constructor () Ownable(msg.sender) {
+    constructor () {
+        _owner = msg.sender;
+
+        logicAddress = address(new WalletContract());
         tokenContracts.push(0x19c0947b0E1169C00854CaF563E20D742C462eE6);//usdt
         tokenContracts.push(0xAb104736299169E3a252E32e49D6f30273832734);//ozc
         tokenContracts.push(0x544d4e0CC6C1cd0d319f3ceB2a8Dbba1B4dE9Dd2);//toto
