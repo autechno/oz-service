@@ -5,7 +5,9 @@ import com.aucloud.constant.ResultCodeEnum;
 import com.aucloud.eth.contracts.WalletManagerContract;
 import com.aucloud.eth.feign.FeignWalletService;
 import com.aucloud.exception.ServiceRuntimeException;
+import com.aucloud.pojo.dto.EthTransactionCallback;
 import com.aucloud.pojo.dto.WithdrawBatchDto;
+import com.aucloud.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,12 +19,12 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.response.EthFeeHistory;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthMaxPriorityFeePerGas;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.StaticEIP1559GasProvider;
+import org.web3j.utils.Convert;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +33,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 @RefreshScope
@@ -56,6 +56,8 @@ public class AupayWalletManagerService {
     private String path;
     @Value("${wallet.file.suffix:/Users/yangli/Documents/ethwallets}")
     private String suffix;
+    @Autowired
+    private FeignWalletService feignWalletService;
 
     @Value("${wallet.manager.operator.address}")
     public void setPrivateKey(String operatorAddr) {
@@ -91,16 +93,23 @@ public class AupayWalletManagerService {
     }
 
     public List<String> getAllUserWallets() throws Exception {
-        List list = getWalletManagerContract().getUserWallets().send();
-        return list;
+        return getWalletManagerContract().getUserWallets().send();
     }
 
     public List<String> createUserWallet(int count) throws Exception {
         WalletManagerContract walletManagerContract = getWalletManagerContract();
         BigInteger userWalletsNumbers = walletManagerContract.getUserWalletsNumbers().send();
         TransactionReceipt receipt = walletManagerContract.generateUserWalletBatch(BigInteger.valueOf(count)).send();
-        List list = walletManagerContract.getSubUserWallets(userWalletsNumbers).send();
-        return list;
+        return walletManagerContract.getSubUserWallets(userWalletsNumbers).send();
+    }
+
+    public String recycleUserWallet(String address) throws Exception {
+        WalletManagerContract walletManagerContract = getWalletManagerContract();
+        TransactionReceipt receipt = walletManagerContract.recycleUserWallet(address).send();
+        if (receipt.isStatusOK()) {
+            return receipt.getTransactionHash();
+        }
+        throw new ServiceRuntimeException(ResultCodeEnum.FAIL);
     }
 
     public BigDecimal getWalletBalance(String address, CurrencyEnum currencyEnum) throws Exception {
@@ -111,14 +120,14 @@ public class AupayWalletManagerService {
     }
 
     public String withdrawBatch(WithdrawBatchDto dto) throws Exception {
+        String innerHash = Tools.generateRandomString(32);
         List<WalletManagerContract.WithdrawMeta> wdArr = new ArrayList<>();
         dto.getAddressAmounts().forEach((k,v) -> {
             WalletManagerContract.WithdrawMeta meta = new WalletManagerContract.WithdrawMeta(k, v.toBigInteger());
             wdArr.add(meta);
         });
         WalletManagerContract walletManagerContract = getWalletManagerContract();
-        RemoteFunctionCall<TransactionReceipt> call = null;
-        CompletableFuture<TransactionReceipt> future = null;
+        RemoteFunctionCall<TransactionReceipt> call;
         if (dto.getCurrencyEnum() == CurrencyEnum.ETH) {
             call = walletManagerContract.withdrawETHBatch(wdArr);
         } else {
@@ -127,144 +136,102 @@ public class AupayWalletManagerService {
         }
         CompletableFuture<String> completableFuture = call.sendAsync().thenApply(TransactionReceipt::getTransactionHash);
 
-        AtomicReference<String> txHash = new AtomicReference<>();
-        log.info("completableFuture.thenAccept");
-        completableFuture.thenAccept(transactionHash -> {
-            log.info("Transaction Hash: {}", transactionHash);
-            txHash.set(transactionHash);
-        }).exceptionally(ex -> {
-            log.error("Error: {}", ex.getMessage(), ex);
-            return null;
-        });
-        completableFuture.join();
-        log.info("completableFuture.join end");
-        String hash = completableFuture.get();
-        log.info("completableFuture.get end");
-        hash = txHash.get();
-        return hash;
+        async(innerHash, completableFuture);
+        return innerHash;
     }
 
-
     public String user2collect(CurrencyEnum currencyEnum, BigDecimal limit) throws Exception {
+        String innerHash = Tools.generateRandomString(32);
         String token = contractProperties.getContractAddress(currencyEnum);
         WalletManagerContract walletManagerContract = getWalletManagerContract();
         RemoteFunctionCall<TransactionReceipt> call = walletManagerContract.collect(Stream.of(new WalletManagerContract.CollectMeta(token, limit.toBigInteger())).toList());
         CompletableFuture<String> completableFuture = call.sendAsync().thenApply(TransactionReceipt::getTransactionHash);
 
-        AtomicReference<String> txHash = new AtomicReference<>();
-        log.info("completableFuture.thenAccept");
-        completableFuture.thenAccept(transactionHash -> {
-            try {
-                listen(transactionHash, receipt -> {
-                    log.info("receipt: {}", receipt);
-                    if (receipt.getTransactionReceipt().isPresent()) {
-                        TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
-                        boolean statusOK = transactionReceipt.isStatusOK();
-                        if (statusOK) {
-                            transactionReceipt.getGasUsed();
-                            String transactionHash1 = transactionReceipt.getTransactionHash();
-                            BigInteger blockNumber = transactionReceipt.getBlockNumber();
-                        } else {
-                            String revertReason = transactionReceipt.getRevertReason();
-                        }
-                    } else {
-                        log.info("Transaction not yet confirmed.");
-                    }
-                    return null;
-                });
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            log.info("Transaction Hash: {}", transactionHash);
-            txHash.set(transactionHash);
-        }).exceptionally(ex -> {
-            log.error("Error: {}", ex.getMessage(), ex);
-            return null;
-        });
-        completableFuture.join();
-        log.info("completableFuture.join end");
-        String hash = completableFuture.get();
-        log.info("completableFuture.get end");
-        hash = txHash.get();
-
-        return hash;
+        async(innerHash, completableFuture);
+        return innerHash;
     }
 
     public String collect2withdraw(CurrencyEnum currencyEnum, BigDecimal limit) throws Exception {
+        String innerHash = Tools.generateRandomString(32);
         String token = contractProperties.getContractAddress(currencyEnum);
         WalletManagerContract walletManagerContract = getWalletManagerContract();
         RemoteFunctionCall<TransactionReceipt> call = walletManagerContract.collect2withdraw(Stream.of(new WalletManagerContract.CollectMeta(token, limit.toBigInteger())).toList());
         CompletableFuture<String> completableFuture = call.sendAsync().thenApply(TransactionReceipt::getTransactionHash);
 
-        AtomicReference<String> txHash = new AtomicReference<>();
-        log.info("completableFuture.thenAccept");
-        completableFuture.thenAccept(transactionHash -> {
-            log.info("Transaction Hash: {}", transactionHash);
-            txHash.set(transactionHash);
-        }).exceptionally(ex -> {
-            log.error("Error: {}", ex.getMessage(), ex);
-            return null;
-        });
-        completableFuture.join();
-        log.info("completableFuture.join end");
-        String hash = completableFuture.get();
-        log.info("completableFuture.get end");
-        hash = txHash.get();
-        return hash;
+        async(innerHash, completableFuture);
+        return innerHash;
     }
 
     public String collect2storage(String storeWallet, CurrencyEnum currencyEnum, BigDecimal limit) throws Exception {
+        String innerHash = Tools.generateRandomString(32);
         String token = contractProperties.getContractAddress(currencyEnum);
         WalletManagerContract walletManagerContract = getWalletManagerContract();
         RemoteFunctionCall<TransactionReceipt> call = walletManagerContract.collect2storage(storeWallet,Stream.of(new WalletManagerContract.CollectMeta(token, limit.toBigInteger())).toList());
         CompletableFuture<String> completableFuture = call.sendAsync().thenApply(TransactionReceipt::getTransactionHash);
 
-        AtomicReference<String> txHash = new AtomicReference<>();
-        log.info("completableFuture.thenAccept");
-        completableFuture.thenAccept(transactionHash -> {
-            log.info("Transaction Hash: {}", transactionHash);
-            txHash.set(transactionHash);
-        }).exceptionally(ex -> {
-            log.error("Error: {}", ex.getMessage(), ex);
-            return null;
-        }).get();
-        completableFuture.join();
-        log.info("completableFuture.join end");
-        String hash = completableFuture.get();
-        log.info("completableFuture.get end");
-        hash = txHash.get();
-
-        listen(hash, receipt -> {
-            log.info("receipt: {}", receipt);
-            if (receipt.getTransactionReceipt().isPresent()) {
-                TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
-                boolean statusOK = transactionReceipt.isStatusOK();
-                if (statusOK) {
-                    transactionReceipt.getGasUsed();
-                    String transactionHash = transactionReceipt.getTransactionHash();
-                    String revertReason = transactionReceipt.getRevertReason();
-                    BigInteger blockNumber = transactionReceipt.getBlockNumber();
-                }
-            } else {
-                log.info("Transaction not yet confirmed.");
-            }
-            return null;
-        });
-        return hash;
+        async(innerHash, completableFuture);
+        return innerHash;
     }
 
-    private <U> U listen(String transactionHash, Function<? super EthGetTransactionReceipt,U> function) throws Exception {
-        return web3jclientService.getWeb3j().ethGetTransactionReceipt(transactionHash)
-                .sendAsync().thenApply(function).get();
-//                .thenApply(receipt -> {
-//                    if (receipt.getTransactionReceipt().isPresent()) {
-//                        System.out.println("Transaction confirmed: " + receipt.getTransactionReceipt().get().getStatus());
-//                    } else {
-//                        System.out.println("Transaction not yet confirmed.");
-//                    }
-//                    return receipt;
-//                });
+    private void async(String innerHash, CompletableFuture<String> completableFuture) throws Exception {
+        log.info("completableFuture.thenAccept");
+        completableFuture.thenAccept(transactionHash -> {
+            EthTransactionCallback callback = new EthTransactionCallback();
+            callback.setInnerHash(innerHash);
+            callback.setHash(transactionHash);
+            feignWalletService.receiptTransactionHashAsync(callback);
+            try {
+                listen(transactionHash, innerHash);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            log.info("Transaction Hash: {}", transactionHash);
+        }).exceptionally(ex -> {
+            log.error("Error: {}", ex.getMessage(), ex);
+            EthTransactionCallback callback = new EthTransactionCallback();
+            callback.setInnerHash(innerHash);
+            callback.setStatus(false);
+            callback.setError(ex.getMessage());
+            feignWalletService.receiptTransactionHashAsync(callback);
+            return null;
+        });
+    }
 
+    private void listen(String transactionHash, String innerHash) throws Exception {
+        web3jclientService.getWeb3j().ethGetTransactionReceipt(transactionHash)
+                .sendAsync().thenApply(receipt -> {
+                    log.info("receipt: {}", receipt);
+                    EthTransactionCallback callback = new EthTransactionCallback();
+                    callback.setInnerHash(innerHash);
+                    callback.setHash(transactionHash);
+                    callback.setStatus(false);
+                    if (receipt.getTransactionReceipt().isPresent()) {
+                        TransactionReceipt transactionReceipt = receipt.getTransactionReceipt().get();
+                        boolean statusOK = transactionReceipt.isStatusOK();
+                        if (statusOK) {
+                            callback.setStatus(true);
+                            try {
+                                BigInteger gasUsed = transactionReceipt.getGasUsed();
+                                if (gasUsed != null) {
+                                    callback.setGasUsed(Convert.fromWei(new BigDecimal(gasUsed), Convert.Unit.ETHER));
+                                }
+                                BigInteger blockNumber = transactionReceipt.getBlockNumber();
+                                if (blockNumber != null) {
+                                    callback.setBlockNumber(new BigDecimal(blockNumber));
+                                }
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                        } else {
+                            String revertReason = transactionReceipt.getRevertReason();
+                            callback.setError(revertReason);
+                        }
+                    } else {
+                        log.info("Transaction not yet confirmed.");
+                    }
+                    feignWalletService.postTransactionResult(callback);
+                    return null;
+                });
     }
 
 
@@ -274,10 +241,10 @@ public class AupayWalletManagerService {
         ContractGasProvider contractGasProvider = getContractGasProvider(web3j);
         return WalletManagerContract.load(walletManagerContractAddress, web3j, transactionManager, contractGasProvider);
     }
-
     private RawTransactionManager getTransactionManager(Web3j web3j,Credentials credentials) {
         return new RawTransactionManager(web3j, credentials);
     }
+
     private ContractGasProvider getContractGasProvider(Web3j web3j) throws IOException {
         BigInteger chainId = web3j.ethChainId().send().getChainId();
         BigInteger gasLimit = BigInteger.valueOf(10000000);

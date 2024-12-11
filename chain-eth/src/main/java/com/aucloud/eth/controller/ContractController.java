@@ -31,6 +31,12 @@ public class ContractController {
         return Result.returnResult(ResultCodeEnum.SUCCESS, allUserWallets);
     }
 
+    @RequestMapping("recycleUserWallet")
+    Result<?> recycleUserWallet(@RequestParam("address") String address) throws Exception {
+        String hash = aupayWalletManagerService.recycleUserWallet(address);
+        return Result.returnResult(ResultCodeEnum.SUCCESS, hash);
+    }
+
     @GetMapping("generateOperatorWallet")
     public Result<String> generateOperatorWallet() {
         String operator = aupayWalletManagerService.generateOperator();
@@ -58,12 +64,10 @@ public class ContractController {
     public Result<String> user2collect(@RequestParam("currencyId") Integer currencyId, @RequestParam("limit") BigDecimal limit) throws Exception {
         String txHash = "";
         CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
-        if (currencyEnum != null) {
-            try {
-                txHash = aupayWalletManagerService.user2collect(currencyEnum, limit);
-            } catch (Exception e) {
-                log.error("", e);
-            }
+        try {
+            txHash = aupayWalletManagerService.user2collect(currencyEnum, limit);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return Result.returnResult(ResultCodeEnum.SUCCESS,txHash);
     }
@@ -72,12 +76,10 @@ public class ContractController {
     public Result<String> collect2withdraw(@RequestParam("currencyId") Integer currencyId, @RequestParam("limit") BigDecimal limit) throws Exception {
         String txHash = "";
         CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
-        if (currencyEnum != null) {
-            try {
-                txHash = aupayWalletManagerService.collect2withdraw(currencyEnum, limit);
-            } catch (Exception e) {
-                log.error("", e);
-            }
+        try {
+            txHash = aupayWalletManagerService.collect2withdraw(currencyEnum, limit);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return Result.returnResult(ResultCodeEnum.SUCCESS,txHash);
     }
@@ -86,12 +88,10 @@ public class ContractController {
     public Result<String> collect2store(@RequestParam("storeWallet") String storeWallet, @RequestParam("currencyId") Integer currencyId, @RequestParam("limit") BigDecimal limit) throws Exception {
         String txHash = "";
         CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
-        if (currencyEnum != null) {
-            try {
-                txHash = aupayWalletManagerService.collect2storage(storeWallet, currencyEnum, limit);
-            } catch (Exception e) {
-                log.error("", e);
-            }
+        try {
+            txHash = aupayWalletManagerService.collect2storage(storeWallet, currencyEnum, limit);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return Result.returnResult(ResultCodeEnum.SUCCESS,txHash);
     }

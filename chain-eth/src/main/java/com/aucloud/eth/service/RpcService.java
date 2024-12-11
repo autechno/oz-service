@@ -248,7 +248,6 @@ public class RpcService {
             //BigInteger value = transaction.getValue();
             TransactionReceipt transactionReceipt = optionalTransactionReceipt.get();
 //            log.info("ethGetTransactionReceipt: {}", JSON.toJSONString(transactionReceipt));
-            transactionReceipt.getBlockNumber();
             String status = transactionReceipt.getStatus();
             List<Log> logs = transactionReceipt.getLogs();
             for(Log log : logs) {

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Data
 public class AcountRechargeDTO {
 
-    private Integer accountId;
+    private Long accountId;
     private Integer accountType;
     private String tradeNo;
     private CurrencyEnum currencyEnum;

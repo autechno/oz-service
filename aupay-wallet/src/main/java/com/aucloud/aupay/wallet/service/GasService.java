@@ -190,7 +190,7 @@ public class GasService {
 
     public void result(String tradeNo, Integer status) {
         WalletCollectTaskRecord taskRecord = walletCollectTaskRecordService.updateResult(tradeNo, status);
-        Integer dependTaskId = taskRecord.getDependTaskId();
+        Long dependTaskId = taskRecord.getDependTaskId();
         if (Objects.equals(status, WalletTransferStatus.SUCCESS) && dependTaskId != null) {
             rabbitTemplate.convertAndSend(QueueConstant.AFTER_GAS_TRANSFER, dependTaskId);
         }

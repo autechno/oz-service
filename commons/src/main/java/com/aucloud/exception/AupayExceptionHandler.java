@@ -88,4 +88,10 @@ public class AupayExceptionHandler {
         return Result.error(message,400);
     }
 
+    @ExceptionHandler(Exception.class)
+    public Result<?> handleException(Exception e) {
+        log.error("error:{}",e.getLocalizedMessage(), e);
+        String message = "未知错误";
+        return Result.error(message,500);
+    }
 }

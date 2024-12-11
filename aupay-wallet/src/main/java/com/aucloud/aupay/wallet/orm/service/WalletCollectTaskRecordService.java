@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 public class WalletCollectTaskRecordService extends ServiceImpl<WalletCollectTaskRecordMapper, WalletCollectTaskRecord> implements IService<WalletCollectTaskRecord> {
 
-    public WalletCollectTaskRecord generateTaskRecord(Integer configId, Integer dependTaskId) {
+    public WalletCollectTaskRecord generateTaskRecord(Integer configId, Long dependTaskId) {
         String tradeNo = UUID.randomUUID().toString();
         WalletCollectTaskRecord taskRecord = new WalletCollectTaskRecord();
         taskRecord.setConfigId(configId);
