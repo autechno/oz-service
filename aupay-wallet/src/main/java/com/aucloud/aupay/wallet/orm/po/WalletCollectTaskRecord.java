@@ -31,7 +31,7 @@ public class WalletCollectTaskRecord implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 任务执行交易号
@@ -61,7 +61,7 @@ public class WalletCollectTaskRecord implements Serializable {
     /**
      * 任务执行失败时导入另一个任务id
      */
-    private Integer dependTaskId;
+    private Long dependTaskId;
 
     /**
      * 备注

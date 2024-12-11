@@ -29,12 +29,12 @@ public class AccountAssets implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 账户id
      */
-    private Integer accountId;
+    private Long accountId;
 
     /**
      * 账户类型

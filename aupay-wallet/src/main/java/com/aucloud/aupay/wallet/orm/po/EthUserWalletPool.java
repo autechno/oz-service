@@ -30,7 +30,7 @@ public class EthUserWalletPool implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 钱包地址
@@ -51,7 +51,7 @@ public class EthUserWalletPool implements Serializable {
      * 被使用用户id
      */
     @TableField(updateStrategy = FieldStrategy.ALWAYS)
-    private Integer userId;
+    private Long userId;
 
     /**
      * 被回收时间

@@ -28,12 +28,12 @@ public class AccountChainWallet implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 账户id
      */
-    private Integer acountId;
+    private Long acountId;
 
     /**
      * 账户类型
@@ -53,7 +53,7 @@ public class AccountChainWallet implements Serializable {
     /**
      * 用户钱包池子id
      */
-    private Integer walletPoolId;
+    private Long walletPoolId;
 
     /**
      * 是否删除

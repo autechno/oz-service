@@ -31,12 +31,12 @@ public class WithdrawTask implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 资产表id
      */
-    private Integer assetsId;
+    private Long assetsId;
 
     /**
      * 交易单号
