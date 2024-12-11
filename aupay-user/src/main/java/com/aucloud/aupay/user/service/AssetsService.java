@@ -7,13 +7,17 @@ import com.aucloud.aupay.user.orm.service.AcountAssetsService;
 import com.aucloud.constant.ResultCodeEnum;
 import com.aucloud.constant.TradeType;
 import com.aucloud.exception.ServiceRuntimeException;
+import com.aucloud.pojo.PageQuery;
+import com.aucloud.pojo.dto.AccountAssetsRecordQuery;
 import com.aucloud.pojo.dto.AcountRechargeDTO;
 import com.aucloud.pojo.dto.WithdrawDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,10 +28,23 @@ public class AssetsService {
     @Autowired
     private AcountAssetsRecordService acountAssetsRecordService;
 
+    public List<AccountAssets> getAccountAssets(Integer accountId, Integer accountType) {
+        return acountAssetsService.lambdaQuery()
+                .eq(AccountAssets::getAccountId, accountId)
+                .eq(AccountAssets::getAccountType, accountType)
+                .list();
+    }
+
+    public Page<AccountAssetsRecord> getAssetsRecords(PageQuery<AccountAssetsRecordQuery> pageQuery) {
+        AccountAssetsRecordQuery conditions = pageQuery.getConditions();
+        Page<AccountAssetsRecord> page = new Page<>(pageQuery.getPageNo(), pageQuery.getPageSize());
+        return acountAssetsRecordService.getBaseMapper().getAssetsRecords(page, conditions);
+    }
+
     public String preDeduct(WithdrawDTO withdrawDTO) {
         AccountAssets acountAssets = acountAssetsService.lambdaQuery()
-                .eq(AccountAssets::getAcountId, withdrawDTO.getAccountId())
-                .eq(AccountAssets::getAcountType, withdrawDTO.getAccountType())
+                .eq(AccountAssets::getAccountId, withdrawDTO.getAccountId())
+                .eq(AccountAssets::getAccountType, withdrawDTO.getAccountType())
                 .eq(AccountAssets::getCurrencyId, withdrawDTO.getCurrencyId())
                 .oneOpt().orElseGet(() -> createNewAssets(withdrawDTO.getAccountId(), withdrawDTO.getAccountType(), withdrawDTO.getCurrencyId()));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
@@ -60,8 +77,8 @@ public class AssetsService {
 
     public void recharge(AcountRechargeDTO dto) {
         AccountAssets acountAssets = acountAssetsService.lambdaQuery()
-                .eq(AccountAssets::getAcountId, dto.getAccountId())
-                .eq(AccountAssets::getAcountType, dto.getAccountType())
+                .eq(AccountAssets::getAccountId, dto.getAccountId())
+                .eq(AccountAssets::getAccountType, dto.getAccountType())
                 .eq(AccountAssets::getCurrencyId, dto.getCurrencyEnum().id)
                 .oneOpt().orElseGet(() -> createNewAssets(dto.getAccountId(), dto.getAccountType(), dto.getCurrencyEnum().id));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
@@ -83,8 +100,8 @@ public class AssetsService {
 
     private AccountAssets createNewAssets(Integer accountId, Integer accountType, Integer currencyId) {
         AccountAssets acountAssets = new AccountAssets();
-        acountAssets.setAcountId(accountId);
-        acountAssets.setAcountType(accountType);
+        acountAssets.setAccountId(accountId);
+        acountAssets.setAccountType(accountType);
         acountAssets.setCurrencyId(currencyId);
         acountAssets.setUpdateTime(new Date());
         return acountAssets;

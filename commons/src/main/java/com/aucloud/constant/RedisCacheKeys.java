@@ -6,6 +6,8 @@ public interface RedisCacheKeys {
 
     String USDT_RATE = "usdt-rate";
 
+    String USDT_TICKET = "usdt-ticket";
+
     String OZBET_USER_TEMP_TOKEN = "ozbet-user-temp-token";
 
     String TRANSFER_REQUEST_FOR_NEXT = "transfer-request-for-next";

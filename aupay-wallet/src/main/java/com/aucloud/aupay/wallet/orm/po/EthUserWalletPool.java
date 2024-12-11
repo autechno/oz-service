@@ -1,10 +1,11 @@
 package com.aucloud.aupay.wallet.orm.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -39,7 +40,7 @@ public class EthUserWalletPool implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 状态
@@ -49,17 +50,18 @@ public class EthUserWalletPool implements Serializable {
     /**
      * 被使用用户id
      */
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private Integer userId;
 
     /**
      * 被回收时间
      */
-    private LocalDateTime recycleTime;
+    private Date recycleTime;
 
     /**
      * 启用时间
      */
-    private LocalDateTime inuseTime;
+    private Date inuseTime;
 
 
 }

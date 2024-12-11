@@ -1,0 +1,16 @@
+server:
+  port: 8086
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+logging:
+  config: classpath:logback.xml
+  level:
+    root: info
+
+spring:
+  main:
+    allow-circular-references: true

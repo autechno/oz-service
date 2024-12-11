@@ -24,9 +24,21 @@ public class WithdrawController {
         return Result.returnResult(ResultCodeEnum.SUCCESS);
     }
 
-    @GetMapping("config")
-    public Result<ConfigWithdraw> config(@RequestParam Integer currencyId, @RequestParam Integer currencyChain) {
+    @GetMapping("getConfig")
+    public Result<ConfigWithdraw> getConfig(@RequestParam Integer currencyId, @RequestParam Integer currencyChain) {
         ConfigWithdraw configWithdraw = configWithdrawService.lambdaQuery().eq(ConfigWithdraw::getCurrencyId, currencyId).eq(ConfigWithdraw::getCurrencyChain, currencyChain).oneOpt().orElseThrow();
         return Result.returnResult(ResultCodeEnum.SUCCESS, configWithdraw);
+    }
+
+    @PostMapping("addConfig")
+    public Result<Boolean> addConfig(@RequestBody ConfigWithdraw configWithdraw) {
+        boolean b = configWithdrawService.save(configWithdraw);
+        return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),b);
+    }
+
+    @PostMapping("updateConfig")
+    public Result<Boolean> updateConfig(@RequestBody ConfigWithdraw configWithdraw) {
+        boolean b = configWithdrawService.updateById(configWithdraw);
+        return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),b);
     }
 }

@@ -1,5 +1,7 @@
 package com.aucloud.constant;
 
+import com.aucloud.exception.ServiceRuntimeException;
+
 import java.math.BigDecimal;
 
 public enum CurrencyEnum {
@@ -43,7 +45,7 @@ public enum CurrencyEnum {
                 return currencyEnum;
             }
         }
-        return null;
+        throw new ServiceRuntimeException(ResultCodeEnum.NON_SUPPORTED_CURRENCY);
     }
 
     public enum CurrencyChainEnum {
@@ -73,9 +75,11 @@ public enum CurrencyEnum {
         public static CurrencyChainEnum findById(Integer id){
             CurrencyChainEnum[] currencyEnums = CurrencyChainEnum.values();
             for(CurrencyChainEnum currencyChainEnumEnum : currencyEnums){
-                if(currencyChainEnumEnum.id.equals(id)) return currencyChainEnumEnum;
+                if(currencyChainEnumEnum.id.equals(id)) {
+                    return currencyChainEnumEnum;
+                }
             }
-            return null;
+            throw new ServiceRuntimeException(ResultCodeEnum.NON_SUPPORTED_CHAIN);
         }
 
     }

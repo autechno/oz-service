@@ -48,6 +48,7 @@ public class AccountAssetsRecord implements Serializable {
      * 币种
      */
     private Integer currencyId;
+    private Integer currencyChain;
 
     /**
      * 交易额

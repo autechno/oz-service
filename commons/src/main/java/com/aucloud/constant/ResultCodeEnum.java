@@ -39,6 +39,9 @@ public enum ResultCodeEnum {
     NOT_BIND_ACCOUNT(" 账号未绑定", "", 1028),
     ACCOUNT_BOUND(" 账号已绑定", "", 1029),
     NON_USER_REGISTERED_EMAIL(" 非用户注册邮箱", "", 1030),
+    NON_SUPPORTED_CURRENCY(" 不支持的币种", "", 1031),
+    NON_SUPPORTED_CHAIN(" 不支持的链", "", 1032),
+    NON_SUPPORTED_OPERATE(" 不支持的操作码", "", 1033),
     ;
 
     private final String label_zh_cn;

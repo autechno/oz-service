@@ -4,12 +4,10 @@ package com.aucloud.aupay.wallet.feign;
 import com.aucloud.pojo.Result;
 import com.aucloud.pojo.dto.WithdrawBatchDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @FeignClient("aupay-eth")
 public interface FeignEthContractService {
@@ -26,4 +24,10 @@ public interface FeignEthContractService {
     Result<String> collect2withdraw(@RequestParam("currencyId") Integer currencyId, @RequestParam("limit") BigDecimal limit);
     @PostMapping("contract/collect2store")
     Result<String> collect2store(@RequestParam("storeWallet") String storeWallet, @RequestParam("currencyId") Integer currencyId, @RequestParam("limit") BigDecimal limit);
+
+    @GetMapping("generateUserWalletsBatch")
+    Result<List<String>> generateUserWalletsBatch(@RequestParam("count") int count);
+
+    @RequestMapping("contract/recycleUserWallet")
+    Result<?> recycleUserWallet(@RequestParam("address") String address);
 }
