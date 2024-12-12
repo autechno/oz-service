@@ -1,15 +1,11 @@
 package com.aucloud.eth.controller;
 
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.entity.TxInfo;
-import com.aucloud.eth.contracts.WalletManagerContract;
-import com.aucloud.eth.service.AupayWalletManagerService;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.entity.TxInfo;
+import com.aucloud.commons.pojo.Result;
 import com.aucloud.eth.service.RpcService;
 import com.aucloud.eth.service.ScanTransactionService;
 import com.aucloud.eth.service.TransferService;
-import com.aucloud.pojo.dto.WithdrawBatchDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

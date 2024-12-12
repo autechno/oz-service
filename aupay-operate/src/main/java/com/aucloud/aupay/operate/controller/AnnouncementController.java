@@ -2,9 +2,9 @@ package com.aucloud.aupay.operate.controller;
 
 import com.aucloud.aupay.operate.orm.po.AupayAnnouncement;
 import com.aucloud.aupay.operate.orm.service.AupayAnnouncementService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.PageQuery;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.PageQuery;
+import com.aucloud.commons.pojo.Result;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

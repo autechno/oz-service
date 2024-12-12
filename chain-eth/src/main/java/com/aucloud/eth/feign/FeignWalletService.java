@@ -1,7 +1,7 @@
 package com.aucloud.eth.feign;
 
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.EthTransactionCallback;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.EthTransactionCallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

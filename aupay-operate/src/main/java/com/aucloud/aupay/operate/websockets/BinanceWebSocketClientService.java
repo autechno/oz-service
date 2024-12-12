@@ -2,8 +2,8 @@ package com.aucloud.aupay.operate.websockets;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.aucloud.constant.RedisCacheKeys;
-import com.aucloud.entity.HuobiTicker;
+import com.aucloud.commons.constant.RedisCacheKeys;
+import com.aucloud.commons.entity.HuobiTicker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

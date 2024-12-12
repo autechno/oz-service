@@ -1,8 +1,8 @@
 package com.aucloud.eth.service;
 
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.TxStatus;
-import com.aucloud.entity.TxInfo;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.TxStatus;
+import com.aucloud.commons.entity.TxInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

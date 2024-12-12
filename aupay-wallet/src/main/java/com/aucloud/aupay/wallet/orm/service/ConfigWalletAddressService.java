@@ -17,4 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfigWalletAddressService extends ServiceImpl<ConfigWalletAddressMapper, ConfigWalletAddress> implements IService<ConfigWalletAddress> {
 
+    public String getWalletAddress(Integer walletType, Integer currencyChain) {
+        ConfigWalletAddress config = lambdaQuery()
+                .eq(ConfigWalletAddress::getWalletType, walletType)
+                .eq(ConfigWalletAddress::getCurrencyChain, currencyChain)
+                .oneOpt().orElseThrow();
+        return config.getWalletAddress();
+    }
 }

@@ -2,7 +2,7 @@ package com.aucloud.aupay.wallet.service;
 
 import com.aucloud.aupay.wallet.feign.FeignEthContractService;
 import com.aucloud.aupay.wallet.orm.constant.CollectEventType;
-import com.aucloud.aupay.wallet.orm.po.ConfigWalletAddress;
+import com.aucloud.aupay.wallet.orm.constant.TradeType;
 import com.aucloud.aupay.wallet.orm.po.ConfigWalletCollect;
 import com.aucloud.aupay.wallet.orm.po.WalletCollectTaskRecord;
 import com.aucloud.aupay.wallet.orm.po.WalletTransferRecord;
@@ -10,11 +10,10 @@ import com.aucloud.aupay.wallet.orm.service.ConfigWalletAddressService;
 import com.aucloud.aupay.wallet.orm.service.ConfigWalletCollectService;
 import com.aucloud.aupay.wallet.orm.service.WalletCollectTaskRecordService;
 import com.aucloud.aupay.wallet.orm.service.WalletTransferRecordService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.aupay.wallet.orm.constant.TradeType;
-import com.aucloud.constant.WalletTransferStatus;
-import com.aucloud.constant.WalletType;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.constant.WalletTransferStatus;
+import com.aucloud.commons.constant.WalletType;
+import com.aucloud.commons.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +62,7 @@ public class Transfer2WithdrawService {
         }
 
         BigDecimal balanceLimit = configWalletCollect.getBalanceLimit();
-
-        ConfigWalletAddress withdrawconfig = configWalletAddressService.lambdaQuery()
-                .eq(ConfigWalletAddress::getWalletType, WalletType.WITHDRAW.getCode())
-                .eq(ConfigWalletAddress::getCurrencyChain, currencyChain)
-                .oneOpt().orElseThrow();
-        String withdrawWallet = withdrawconfig.getWalletAddress();
+        String withdrawWallet = configWalletAddressService.getWalletAddress(WalletType.WITHDRAW.getCode(), currencyChain);
         if (StringUtils.isBlank(withdrawWallet)) {
             log.error("transfer2withdraw error, withdrawWallet is empty");
             taskRecord.setStatus(WalletTransferStatus.FAILED);
@@ -91,12 +85,7 @@ public class Transfer2WithdrawService {
             return;
         }
         BigDecimal supplyAmount = configWalletCollect.getSupplyAmount();
-
-        ConfigWalletAddress transferconfig = configWalletAddressService.lambdaQuery()
-                .eq(ConfigWalletAddress::getWalletType, WalletType.TRANSFER.getCode())
-                .eq(ConfigWalletAddress::getCurrencyChain, currencyChain)
-                .oneOpt().orElseThrow();
-        String transferWallet = transferconfig.getWalletAddress();
+        String transferWallet = configWalletAddressService.getWalletAddress(WalletType.TRANSFER.getCode(), currencyChain);
         if (StringUtils.isBlank(transferWallet)) {
             log.error("transfer2withdraw error, transferWallet is empty");
             taskRecord.setStatus(WalletTransferStatus.FAILED);

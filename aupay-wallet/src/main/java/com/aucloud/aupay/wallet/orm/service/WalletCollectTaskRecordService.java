@@ -2,7 +2,7 @@ package com.aucloud.aupay.wallet.orm.service;
 
 import com.aucloud.aupay.wallet.orm.mapper.WalletCollectTaskRecordMapper;
 import com.aucloud.aupay.wallet.orm.po.WalletCollectTaskRecord;
-import com.aucloud.constant.WalletTransferStatus;
+import com.aucloud.commons.constant.WalletTransferStatus;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

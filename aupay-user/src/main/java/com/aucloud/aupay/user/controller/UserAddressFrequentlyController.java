@@ -2,8 +2,8 @@ package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.user.orm.po.AccountAddressFrequently;
 import com.aucloud.aupay.user.orm.service.AccountAddressFrequentlyService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

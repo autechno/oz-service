@@ -5,10 +5,10 @@ import com.aucloud.aupay.wallet.feign.BitcoinClient;
 import com.aucloud.aupay.wallet.feign.FeignEthContractService;
 import com.aucloud.aupay.wallet.feign.FeignEthService;
 import com.aucloud.aupay.wallet.feign.TronClient;
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.exception.ServiceRuntimeException;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Slf4j
 @Service

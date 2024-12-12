@@ -1,9 +1,8 @@
 package com.aucloud.aupay.user.controller;
 
-import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.aupay.user.service.GoogleAuthenticatorService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;

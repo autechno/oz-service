@@ -1,6 +1,6 @@
 package com.aucloud.aupay.wallet.feign;
 
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.pojo.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

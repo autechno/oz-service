@@ -3,9 +3,9 @@ package com.aucloud.aupay.wallet.controller;
 import com.aucloud.aupay.wallet.orm.po.ConfigWithdraw;
 import com.aucloud.aupay.wallet.orm.service.ConfigWithdrawService;
 import com.aucloud.aupay.wallet.orm.service.WithdrawTaskService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.WithdrawDTO;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.WithdrawDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

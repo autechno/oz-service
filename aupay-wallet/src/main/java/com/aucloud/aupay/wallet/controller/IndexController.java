@@ -2,11 +2,11 @@ package com.aucloud.aupay.wallet.controller;
 
 import com.aucloud.aupay.wallet.orm.po.AccountChainWallet;
 import com.aucloud.aupay.wallet.orm.service.AcountChainWalletService;
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.AccountChainWalletDto;
-import com.aucloud.pojo.vo.RechargeInfoVo;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
+import com.aucloud.commons.pojo.vo.RechargeInfoVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -5,7 +5,7 @@ import com.aucloud.aupay.wallet.orm.po.ConfigWalletCollect;
 import com.aucloud.aupay.wallet.orm.po.WalletCollectTaskRecord;
 import com.aucloud.aupay.wallet.orm.service.ConfigWalletCollectService;
 import com.aucloud.aupay.wallet.orm.service.WalletCollectTaskRecordService;
-import com.aucloud.constant.QueueConstant;
+import com.aucloud.commons.constant.QueueConstant;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

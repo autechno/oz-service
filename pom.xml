@@ -23,6 +23,7 @@
         <module>aupay-user</module>
         <module>aupay-admin</module>
         <module>aupay-operate</module>
+        <module>aupay-validate</module>
     </modules>
 
     <properties>

@@ -1,8 +1,8 @@
 package com.aucloud.aupay.user.controller;
 
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.utils.IpUtils;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.utils.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

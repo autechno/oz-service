@@ -1,9 +1,9 @@
 package com.aucloud.aupay.wallet.controller;
 
 import com.aucloud.aupay.wallet.orm.service.WalletTransferRecordService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.EthTransactionCallback;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.EthTransactionCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

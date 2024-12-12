@@ -1,10 +1,10 @@
 package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.user.service.PasswordService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.ResetPasswordDTO;
-import com.aucloud.pojo.dto.UpdatePasswordDTO;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.ResetPasswordDTO;
+import com.aucloud.commons.pojo.dto.UpdatePasswordDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

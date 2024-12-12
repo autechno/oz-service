@@ -1,5 +1,6 @@
 package com.aucloud.aupay.wallet.orm.service;
 
+import com.aucloud.aupay.constant.*;
 import com.aucloud.aupay.wallet.feign.FeignEthContractService;
 import com.aucloud.aupay.wallet.feign.FeignUserService;
 import com.aucloud.aupay.wallet.orm.constant.TradeType;
@@ -7,11 +8,12 @@ import com.aucloud.aupay.wallet.orm.po.ConfigWalletAddress;
 import com.aucloud.aupay.wallet.orm.po.WalletTransferRecord;
 import com.aucloud.aupay.wallet.orm.po.WithdrawTask;
 import com.aucloud.aupay.wallet.orm.mapper.WithdrawTaskMapper;
+import com.aucloud.commons.constant.*;
 import com.aucloud.constant.*;
-import com.aucloud.exception.ServiceRuntimeException;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.WithdrawBatchDto;
-import com.aucloud.pojo.dto.WithdrawDTO;
+import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.WithdrawBatchDto;
+import com.aucloud.commons.pojo.dto.WithdrawDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

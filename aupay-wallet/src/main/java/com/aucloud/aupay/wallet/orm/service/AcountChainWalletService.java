@@ -3,7 +3,7 @@ package com.aucloud.aupay.wallet.orm.service;
 import com.aucloud.aupay.wallet.orm.po.AccountChainWallet;
 import com.aucloud.aupay.wallet.orm.mapper.AccountChainWalletMapper;
 import com.aucloud.aupay.wallet.orm.po.EthUserWalletPool;
-import com.aucloud.constant.CurrencyEnum;
+import com.aucloud.commons.constant.CurrencyEnum;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

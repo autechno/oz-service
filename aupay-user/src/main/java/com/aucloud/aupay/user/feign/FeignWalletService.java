@@ -1,7 +1,7 @@
 package com.aucloud.aupay.user.feign;
 
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.AccountChainWalletDto;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

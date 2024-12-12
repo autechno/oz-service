@@ -2,9 +2,9 @@ package com.aucloud.aupay.operate.controller;
 
 
 import com.aucloud.aupay.operate.service.OperationService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.entity.HuobiTicker;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.entity.HuobiTicker;
+import com.aucloud.commons.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

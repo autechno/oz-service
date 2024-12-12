@@ -2,8 +2,8 @@ package com.aucloud.eth.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.QueueConstant;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.QueueConstant;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;

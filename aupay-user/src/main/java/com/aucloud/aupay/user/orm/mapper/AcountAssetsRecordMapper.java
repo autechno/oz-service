@@ -1,12 +1,10 @@
 package com.aucloud.aupay.user.orm.mapper;
 
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
-import com.aucloud.pojo.dto.AccountAssetsRecordQuery;
+import com.aucloud.commons.pojo.dto.AccountAssetsRecordQuery;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * <p>

@@ -1,9 +1,9 @@
 package com.aucloud.aupay.trade.controller;
 
 import com.aucloud.aupay.trade.service.WithdrawService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.WithdrawDTO;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.WithdrawDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

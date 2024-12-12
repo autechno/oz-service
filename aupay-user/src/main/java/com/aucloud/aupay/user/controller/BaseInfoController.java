@@ -3,17 +3,13 @@ package com.aucloud.aupay.user.controller;
 import com.aucloud.aupay.user.orm.po.AupayUserLoginLog;
 import com.aucloud.aupay.user.orm.service.AupayUserLoginLogService;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
-import com.aucloud.constant.ResultCodeEnum;
-import com.aucloud.pojo.Result;
-import com.aucloud.pojo.dto.UserInfoDTO;
-import com.aucloud.pojo.vo.UserInfoVo;
+import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.dto.UserInfoDTO;
+import com.aucloud.commons.pojo.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 public class BaseInfoController {

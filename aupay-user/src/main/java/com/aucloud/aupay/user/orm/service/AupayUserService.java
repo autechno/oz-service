@@ -2,8 +2,8 @@ package com.aucloud.aupay.user.orm.service;
 
 import com.aucloud.aupay.user.orm.mapper.AupayUserMapper;
 import com.aucloud.aupay.user.orm.po.AupayUser;
-import com.aucloud.pojo.dto.UserInfoDTO;
-import com.aucloud.pojo.vo.UserInfoVo;
+import com.aucloud.commons.pojo.dto.UserInfoDTO;
+import com.aucloud.commons.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;

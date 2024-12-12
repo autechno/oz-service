@@ -1,17 +1,17 @@
 package com.aucloud.aupay.wallet.service;
 
-import com.alibaba.fastjson2.JSON;
+import com.aucloud.aupay.constant.*;
 import com.aucloud.aupay.wallet.feign.FeignEthService;
 import com.aucloud.aupay.wallet.orm.constant.TradeType;
-import com.aucloud.aupay.wallet.orm.po.ConfigWalletAddress;
 import com.aucloud.aupay.wallet.orm.po.ConfigWalletCollect;
 import com.aucloud.aupay.wallet.orm.po.WalletCollectTaskRecord;
 import com.aucloud.aupay.wallet.orm.po.WalletTransferRecord;
 import com.aucloud.aupay.wallet.orm.service.ConfigWalletAddressService;
 import com.aucloud.aupay.wallet.orm.service.WalletCollectTaskRecordService;
 import com.aucloud.aupay.wallet.orm.service.WalletTransferRecordService;
+import com.aucloud.commons.constant.*;
 import com.aucloud.constant.*;
-import com.aucloud.pojo.Result;
+import com.aucloud.commons.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,11 +41,7 @@ public class GasService {
     private RabbitTemplate rabbitTemplate;
 
     public boolean checkOperatorGas(ConfigWalletCollect gasConfig) {
-        ConfigWalletAddress operatorConfig = configWalletAddressService.lambdaQuery()
-                .eq(ConfigWalletAddress::getWalletType, WalletType.OPERATOR.getCode())
-                .eq(ConfigWalletAddress::getCurrencyChain, gasConfig.getCurrencyChain())
-                .oneOpt().orElseThrow();
-        String operatorWallet = operatorConfig.getWalletAddress();
+        String operatorWallet = configWalletAddressService.getWalletAddress(WalletType.OPERATOR.getCode(), gasConfig.getCurrencyChain());
         if (StringUtils.isBlank(operatorWallet)) {
             log.error("gas2operator error, operatorWallet is empty");
             return false;
@@ -66,11 +62,7 @@ public class GasService {
 
     public boolean gas2operator(ConfigWalletCollect configWalletCollect, WalletCollectTaskRecord taskRecord) {
         Integer currencyChain = configWalletCollect.getCurrencyChain();
-        ConfigWalletAddress operatorConfig = configWalletAddressService.lambdaQuery()
-                .eq(ConfigWalletAddress::getWalletType, WalletType.OPERATOR.getCode())
-                .eq(ConfigWalletAddress::getCurrencyChain, currencyChain)
-                .oneOpt().orElseThrow();
-        String operatorWallet = operatorConfig.getWalletAddress();
+        String operatorWallet = configWalletAddressService.getWalletAddress(WalletType.OPERATOR.getCode(), currencyChain);
         if (StringUtils.isBlank(operatorWallet)) {
             log.error("gas2operator error, operatorWallet is empty");
             taskRecord.setStatus(WalletTransferStatus.FAILED);
@@ -81,11 +73,7 @@ public class GasService {
             return false;
         }
 
-        ConfigWalletAddress gasConfig = configWalletAddressService.lambdaQuery()
-                .eq(ConfigWalletAddress::getWalletType, WalletType.GAS.getCode())
-                .eq(ConfigWalletAddress::getCurrencyChain, currencyChain)
-                .oneOpt().orElseThrow();
-        String gasWallet = gasConfig.getWalletAddress();
+        String gasWallet = configWalletAddressService.getWalletAddress(WalletType.GAS.getCode(), currencyChain);
         if (StringUtils.isBlank(gasWallet)) {
             log.error("gas2operator error, gasWallet is empty");
 //            return "error:gasWallet is empty";
