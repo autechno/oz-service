@@ -24,6 +24,7 @@
         <module>aupay-admin</module>
         <module>aupay-operate</module>
         <module>aupay-validate</module>
+        <module>aupay-gateway</module>
     </modules>
 
     <properties>

@@ -1,0 +1,79 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: aupay-gateway
+  cloud:
+    nacos:
+      server-addr: 192.168.1.253:8848
+      username: ozpay
+      password: auTech20240606
+      discovery:
+        namespace: cd029db4-52e7-4e92-8130-6ef1df8a5452
+        enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-headers: "*"
+            allowed-methods: "*"
+            allow-credentials: true
+            maxAge: 3600
+        add-to-simple-url-handler-mapping: true
+      routes:
+        - id: opt-websocket #websocket配置
+          uri: lb:ws://service-operate
+          predicates:
+            - Path=/opt-websocket/**
+          filters:
+            - StripPrefix=1
+        - id: chain-rpc-tron
+          uri: lb://chain-rpc-tron
+          predicates:
+            - Path=/chain-rpc-tron/**
+          filters:
+            - StripPrefix=1
+        - id: chain-rpc-bitcoin
+          uri: lb://chain-rpc-bitcoin
+          predicates:
+            - Path=/chain-rpc-bitcoin/**
+          filters:
+            - StripPrefix=1
+        - id: chain-eth
+          uri: lb://chain-eth
+          predicates:
+            - Path=/chain-eth/**
+          filters:
+            - StripPrefix=1
+        - id: admin
+          uri: lb://service-admin
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+        - id: aupay-user
+          uri: lb://aupay-user
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        - id: aupay-wallet
+          uri: lb://aupay-wallet
+          predicates:
+            - Path=/wallet/**
+          filters:
+            - StripPrefix=1
+        - id: operate
+          uri: lb://service-operate
+          predicates:
+            - Path=/operate/**
+          filters:
+            - StripPrefix=1
+logging:
+  level:
+    root: info
