@@ -41,8 +41,8 @@ public class UserAddressFrequentlyController {
 //    @Operation(value = OperationEnum.USER_ADDRESS_FREQUENTLY,handler = AdminOperationHandler.class)
     public Result<Boolean> saveOrUpdateUserAddressFrequently(@RequestBody AccountAddressFrequently addressFrequently){
 //        String userId = SecurityTokenHandler.getTokenInfoObject().getId();
+        Long accountId = 0L;
         Integer accountType = 0;
-        Integer accountId = 0;
         addressFrequently.setAccountId(accountId);
         addressFrequently.setAccountType(accountType);
         boolean b = accountAddressFrequentlyService.saveOrUpdate(addressFrequently);

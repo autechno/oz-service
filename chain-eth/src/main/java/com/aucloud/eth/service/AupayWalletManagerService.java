@@ -40,22 +40,24 @@ import java.util.stream.Stream;
 @Service
 public class AupayWalletManagerService {
 
-    private static final String password = "c5457a9017e7";
+//    private static final String password = "c5457a9017e7";
 //    private static final String path = "/Users/yangli/Documents/ethwallets";
 
     private String privateKey;
-
-    @Value("${wallet.manager.contract.address}")
-    private String walletManagerContractAddress;
     @Autowired
     private ContractProperties contractProperties;
     @Autowired
     private Web3jClientService web3jclientService;
 
+    @Value("${wallet.manager.contract.address}")
+    private String walletManagerContractAddress;
+
     @Value("${wallet.file.path:/Users/yangli/Documents/ethwallets}")
     private String path;
-    @Value("${wallet.file.suffix:/Users/yangli/Documents/ethwallets}")
+    @Value("${wallet.file.suffix:.unk}")
     private String suffix;
+    @Value("${wallet.file.pwd:c5457a9017e7}")
+    private String walletPassword;
     @Autowired
     private FeignWalletService feignWalletService;
 
@@ -63,7 +65,7 @@ public class AupayWalletManagerService {
     public void setPrivateKey(String operatorAddr) {
         try {
             File file = new File(path, operatorAddr+suffix);
-            Credentials credentials = WalletUtils.loadCredentials(password, file);
+            Credentials credentials = WalletUtils.loadCredentials(walletPassword, file);
             privateKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -74,10 +76,10 @@ public class AupayWalletManagerService {
     public String generateOperator() {
         String address = "";
         try {
-            String filename = WalletUtils.generateNewWalletFile(password, new File(path));
+            String filename = WalletUtils.generateNewWalletFile(walletPassword, new File(path));
             File file = new File(path + "/" + filename);
             // 加载钱包的凭证
-            Credentials credentials = WalletUtils.loadCredentials(password, file);
+            Credentials credentials = WalletUtils.loadCredentials(walletPassword, file);
             // 获取钱包的以太坊地址和私钥
             address = credentials.getAddress();
             boolean b = file.renameTo(new File(path + "/" + address+suffix));

@@ -98,7 +98,7 @@ public class AssetsService {
         acountAssetsRecordService.save(acountAssetsRecord);
     }
 
-    private AccountAssets createNewAssets(Integer accountId, Integer accountType, Integer currencyId) {
+    private AccountAssets createNewAssets(Long accountId, Integer accountType, Integer currencyId) {
         AccountAssets acountAssets = new AccountAssets();
         acountAssets.setAccountId(accountId);
         acountAssets.setAccountType(accountType);
@@ -112,7 +112,7 @@ public class AssetsService {
         acountAssetsRecord.setStatus(0);
         acountAssetsRecord.setFinishTime(new Date());
         acountAssetsRecordService.updateById(acountAssetsRecord);
-        Integer assetsId = acountAssetsRecord.getAssetsId();
+        Long assetsId = acountAssetsRecord.getAssetsId();
         BigDecimal amount = acountAssetsRecord.getAmount() == null ? BigDecimal.ZERO : acountAssetsRecord.getAmount();
         BigDecimal fee = acountAssetsRecord.getFee() == null ? BigDecimal.ZERO : acountAssetsRecord.getFee();
         AccountAssets assets = acountAssetsService.getById(assetsId);

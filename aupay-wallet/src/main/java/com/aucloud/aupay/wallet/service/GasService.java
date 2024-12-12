@@ -1,6 +1,5 @@
 package com.aucloud.aupay.wallet.service;
 
-import com.aucloud.aupay.constant.*;
 import com.aucloud.aupay.wallet.feign.FeignEthService;
 import com.aucloud.aupay.wallet.orm.constant.TradeType;
 import com.aucloud.aupay.wallet.orm.po.ConfigWalletCollect;
@@ -10,7 +9,6 @@ import com.aucloud.aupay.wallet.orm.service.ConfigWalletAddressService;
 import com.aucloud.aupay.wallet.orm.service.WalletCollectTaskRecordService;
 import com.aucloud.aupay.wallet.orm.service.WalletTransferRecordService;
 import com.aucloud.commons.constant.*;
-import com.aucloud.constant.*;
 import com.aucloud.commons.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

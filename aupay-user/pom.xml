@@ -39,6 +39,11 @@
         </dependency>
         <dependency>
             <groupId>com.aucloud.aupay</groupId>
+            <artifactId>aupay-validate</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aucloud.aupay</groupId>
             <artifactId>aupay-commons-db</artifactId>
             <version>3.0</version>
         </dependency>

@@ -28,7 +28,7 @@ public class AcountChainWalletService extends ServiceImpl<AccountChainWalletMapp
     @Autowired
     private EthUserWalletPoolService ethUserWalletPoolService;
 
-    public AccountChainWallet createAccountChainWallet(Integer accountId, Integer accountType, Integer currencyChain) {
+    public AccountChainWallet createAccountChainWallet(Long accountId, Integer accountType, Integer currencyChain) {
         AccountChainWallet accountChainWallet = null;
         CurrencyEnum.CurrencyChainEnum chainEnum = CurrencyEnum.CurrencyChainEnum.findById(currencyChain);
         switch (chainEnum) {
@@ -39,14 +39,14 @@ public class AcountChainWalletService extends ServiceImpl<AccountChainWalletMapp
         return accountChainWallet;
     }
 
-    private AccountChainWallet createEthWallet(Integer accountId, Integer accountType) {
+    private AccountChainWallet createEthWallet(Long accountId, Integer accountType) {
         AccountChainWallet accountChainWallet = lambdaQuery()
                 .eq(AccountChainWallet::getAcountId, accountId)
                 .eq(AccountChainWallet::getAcountType, accountType)
                 .eq(AccountChainWallet::getCurrencyChain, CurrencyEnum.CurrencyChainEnum.ETH.id)
                 .oneOpt().orElseGet(AccountChainWallet::new);
         if (accountChainWallet.getId() != null) {
-            Integer walletPoolId = accountChainWallet.getWalletPoolId();
+            Long walletPoolId = accountChainWallet.getWalletPoolId();
             EthUserWalletPool pool = ethUserWalletPoolService.getById(walletPoolId);
             ethUserWalletPoolService.recycleUserWallet(pool);
         }
@@ -68,7 +68,7 @@ public class AcountChainWalletService extends ServiceImpl<AccountChainWalletMapp
         return null;
     }
 
-    public List<AccountChainWallet> generateAccountWallet(Integer accountId, Integer accountType) {
+    public List<AccountChainWallet> generateAccountWallet(Long accountId, Integer accountType) {
         CurrencyEnum.CurrencyChainEnum[] values = CurrencyEnum.CurrencyChainEnum.values();
         List<AccountChainWallet> list = new ArrayList<>();
         for (CurrencyEnum.CurrencyChainEnum chainEnum : values) {

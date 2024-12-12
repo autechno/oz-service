@@ -25,7 +25,7 @@ public class IndexController {
 
     @RequestMapping(value = "getRechargeInfo",method = RequestMethod.GET)
     public Result<RechargeInfoVo> getRechargeInfo(@RequestParam Integer currencyId, @RequestParam Integer currencyChain) {
-        Integer accountId = 0;
+        Long accountId = 0L;
         Integer accountType = 0;
         CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
         AccountChainWallet accountChainWallet = acountChainWalletService.lambdaQuery()
@@ -63,7 +63,7 @@ public class IndexController {
 //    }
 
     @RequestMapping("generateAccountWallet")
-    public Result<List<AccountChainWalletDto>> generateAccountWallet(@RequestParam Integer accountId, @RequestParam Integer accountType) {
+    public Result<List<AccountChainWalletDto>> generateAccountWallet(@RequestParam Long accountId, @RequestParam Integer accountType) {
         List<AccountChainWallet> list = acountChainWalletService.generateAccountWallet(accountId, accountType);
         List<AccountChainWalletDto> collect = list.stream().map(o -> {
             AccountChainWalletDto dto = new AccountChainWalletDto();

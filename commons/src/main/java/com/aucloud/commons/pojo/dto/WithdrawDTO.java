@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class WithdrawDTO {
 
-    private Integer accountId;
+    private Long accountId;
     private Integer accountType;
     private Integer currencyId;
     private Integer currencyChain;
