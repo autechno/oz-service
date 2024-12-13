@@ -21,9 +21,11 @@ public class Result<T> implements Serializable {
         this.message = message;
         this.data = data;
     }
+
     private Result(Integer code) {
         this.code = code;
     }
+
     private Result(Integer code, String message) {
         this.code = code;
         this.message = message;
@@ -33,11 +35,11 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> returnResult(Integer code, String message, T data) {
-        return new Result<>(code,message,data);
+        return new Result<>(code, message, data);
     }
 
     public static <T> Result<T> returnResult(Integer code, String message) {
-        return new Result<>(code,message);
+        return new Result<>(code, message);
     }
 
     public static <T> Result<T> returnResult(Integer code) {
@@ -47,12 +49,17 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> returnResult(ResultCodeEnum resultCodeEnum) {
         return new Result<>(resultCodeEnum.getCode());
     }
+
     public static <T> Result<T> returnResult(ResultCodeEnum resultCodeEnum, T data) {
         return new Result<>(resultCodeEnum.getCode(), resultCodeEnum.getLabel_zh_cn(), data);
     }
 
     public static <T> Result<T> error(String message, Integer exceptionCode) {
-        return new Result<>(exceptionCode,message,null);
+        return new Result<>(exceptionCode, message, null);
+    }
+
+    public static <T> Result<T> success(T data) {
+        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(), data);
     }
 
     @Override
