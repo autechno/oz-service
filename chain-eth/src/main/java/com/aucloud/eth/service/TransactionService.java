@@ -1,10 +1,11 @@
 package com.aucloud.eth.service;
 
 import com.alibaba.fastjson2.JSON;
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.QueueConstant;
-import com.aucloud.constant.RedisCacheKeys;
-import com.aucloud.pojo.dto.RechargeDTO;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.QueueConstant;
+import com.aucloud.commons.constant.RedisCacheKeys;
+import com.aucloud.commons.pojo.dto.RechargeDTO;
+import com.aucloud.commons.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -85,7 +86,7 @@ public class TransactionService {
                     if(event.equalsIgnoreCase(contractProperties.getTransfer())){//是否transfer交易
                         isTransfer = true;
                         fromAddress = topics.get(1);
-                        toAddress = hexToAddress(topics.get(2));
+                        toAddress = Tools.hexToAddress(topics.get(2));
                         String address = log.getAddress();
                         String v = log.getData();
                         if (address.equalsIgnoreCase(result[1])) {
@@ -118,17 +119,6 @@ public class TransactionService {
             }
         }
         return rechargeDTO;
-    }
-
-    public String hexToAddress(String strHex) {
-        if (strHex.length() > 42) {
-            if (strHex.charAt(0) == '0' && (strHex.charAt(1) == 'X' || strHex.charAt(1) == 'x')) {
-                strHex = strHex.substring(2);
-            }
-            strHex = strHex.substring(24);
-            return "0x" + strHex;
-        }
-        return null;
     }
 
     public String[] checkAddressType(String toAddress) {

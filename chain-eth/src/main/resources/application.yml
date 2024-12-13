@@ -8,6 +8,15 @@ spring:
       max-request-size: 22MB
   main:
     allow-circular-references: true
+  cloud:
+    openfeign:
+      httpclient:
+        connection-timeout: 20000
+      client:
+        config:
+          default:
+            connect-timeout: 20000
+            read-timeout: 8000
 
 logging:
   config: classpath:logback.xml

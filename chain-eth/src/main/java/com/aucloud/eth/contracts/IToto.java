@@ -17,7 +17,6 @@ import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.BaseEventResponse;
@@ -38,9 +37,7 @@ import org.web3j.tx.gas.ContractGasProvider;
  */
 @SuppressWarnings("rawtypes")
 public class IToto extends Contract {
-    public static final String BINARY = "";
-
-    private static String librariesLinkedBinary;
+    public static final String BINARY = "Bin file was not provided";
 
     public static final String FUNC_ALLOWANCE = "allowance";
 
@@ -247,40 +244,6 @@ public class IToto extends Contract {
     public static IToto load(String contractAddress, Web3j web3j,
             TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
         return new IToto(contractAddress, web3j, transactionManager, contractGasProvider);
-    }
-
-    public static RemoteCall<IToto> deploy(Web3j web3j, Credentials credentials,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IToto.class, web3j, credentials, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IToto> deploy(Web3j web3j, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IToto.class, web3j, credentials, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static RemoteCall<IToto> deploy(Web3j web3j, TransactionManager transactionManager,
-            ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(IToto.class, web3j, transactionManager, contractGasProvider, getDeploymentBinary(), "");
-    }
-
-    @Deprecated
-    public static RemoteCall<IToto> deploy(Web3j web3j, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(IToto.class, web3j, transactionManager, gasPrice, gasLimit, getDeploymentBinary(), "");
-    }
-
-    public static void linkLibraries(List<Contract.LinkReference> references) {
-        librariesLinkedBinary = linkBinaryWithReferences(BINARY, references);
-    }
-
-    private static String getDeploymentBinary() {
-        if (librariesLinkedBinary != null) {
-            return librariesLinkedBinary;
-        } else {
-            return BINARY;
-        }
     }
 
     public static class ApprovalEventResponse extends BaseEventResponse {

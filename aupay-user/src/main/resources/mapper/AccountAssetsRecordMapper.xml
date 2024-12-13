@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aucloud.aupay.user.orm.mapper.AcountAssetsRecordMapper">
+
+    <select id="getAssetsRecords" resultType="com.aucloud.aupay.user.orm.po.AccountAssetsRecord" >
+        select t1.* from account_assets_record t1, account_assets t2
+        <where>
+            t1.assets_id = t2.id
+            <if test="conditions.accountId != null">
+                and t2.account_id=#{conditions.accountId}
+            </if>
+            <if test="conditions.accountType != null">
+                and t2.account_type=#{conditions.accountType}
+            </if>
+        </where>
+    </select>
+</mapper>

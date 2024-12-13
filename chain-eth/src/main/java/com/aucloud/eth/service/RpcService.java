@@ -1,8 +1,9 @@
 package com.aucloud.eth.service;
 
-import com.aucloud.constant.CurrencyEnum;
-import com.aucloud.constant.TxStatus;
-import com.aucloud.entity.TxInfo;
+import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.TxStatus;
+import com.aucloud.commons.entity.TxInfo;
+import com.aucloud.commons.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -248,7 +249,6 @@ public class RpcService {
             //BigInteger value = transaction.getValue();
             TransactionReceipt transactionReceipt = optionalTransactionReceipt.get();
 //            log.info("ethGetTransactionReceipt: {}", JSON.toJSONString(transactionReceipt));
-            transactionReceipt.getBlockNumber();
             String status = transactionReceipt.getStatus();
             List<Log> logs = transactionReceipt.getLogs();
             for(Log log : logs) {
@@ -263,7 +263,7 @@ public class RpcService {
                             BigDecimal.TEN.pow(currencyEnum.precision),
                             currencyEnum.precision,
                             RoundingMode.HALF_EVEN);
-                    TxInfo.Transfer transfer = TxInfo.createTransfer(hexToAddress(toAddress), amount);
+                    TxInfo.Transfer transfer = TxInfo.createTransfer(Tools.hexToAddress(toAddress), amount);
                     txInfo.setTransfer(Collections.singletonList(transfer));
                     break;
                 }
@@ -291,16 +291,6 @@ public class RpcService {
             }
         } catch (Exception e) {
             log.error("获取blocktimestamp异常", e);
-        }
-        return null;
-    }
-    public static String hexToAddress(String strHex) {
-        if (strHex.length() > 42) {
-            if (strHex.charAt(0) == '0' && (strHex.charAt(1) == 'X' || strHex.charAt(1) == 'x')) {
-                strHex = strHex.substring(2);
-            }
-            strHex = strHex.substring(24);
-            return "0x" + strHex;
         }
         return null;
     }

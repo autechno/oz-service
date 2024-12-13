@@ -1,6 +1,6 @@
 package com.aucloud.eth.service;
 
-import com.aucloud.constant.QueueConstant;
+import com.aucloud.commons.constant.QueueConstant;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;

@@ -1,14 +1,16 @@
 package com.aucloud.aupay.wallet.orm.po;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.aucloud.aupay.wallet.orm.constant.TradeType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>
@@ -30,12 +32,17 @@ public class WalletTransferRecord implements Serializable {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 交易流水
      */
     private String tradeNo;
+
+    /**
+     * 交易类型
+     */
+    private TradeType tradeType;
 
     /**
      * 转出地址
@@ -80,12 +87,12 @@ public class WalletTransferRecord implements Serializable {
     /**
      * 创建交易时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 完成时间
      */
-    private LocalDateTime finishTime;
+    private Date finishTime;
 
 
 }
