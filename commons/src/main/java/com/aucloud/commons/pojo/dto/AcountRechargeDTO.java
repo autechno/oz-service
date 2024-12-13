@@ -12,5 +12,6 @@ public class AcountRechargeDTO {
     private Integer accountType;
     private String tradeNo;
     private CurrencyEnum currencyEnum;
+    private CurrencyEnum.CurrencyChainEnum chainEnum;
     private BigDecimal amount;
 }

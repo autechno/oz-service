@@ -1,6 +1,7 @@
-package com.aucloud.commons.exception;
+package com.aucloud.commons.exception.handler;
 
 import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;

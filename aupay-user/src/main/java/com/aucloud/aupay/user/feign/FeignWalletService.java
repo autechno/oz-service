@@ -12,6 +12,9 @@ import java.util.List;
 @Service
 public interface FeignWalletService {
 
-    @RequestMapping(value = "getAccountWallets",method = RequestMethod.GET)
+    @RequestMapping(value = "wallet/getAccountWallets",method = RequestMethod.GET)
     Result<List<AccountChainWalletDto>> getAccountWallets(@RequestParam Integer accountId, @RequestParam Integer accountType);
+
+    @RequestMapping("wallet/generateAccountWallet")
+    public Result<List<AccountChainWalletDto>> generateAccountWallet(@RequestParam Long accountId, @RequestParam Integer accountType);
 }

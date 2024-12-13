@@ -4,6 +4,7 @@ import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
 import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
 import com.aucloud.aupay.user.orm.service.AcountAssetsService;
+import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.constant.TradeType;
 import com.aucloud.commons.exception.ServiceRuntimeException;
@@ -12,10 +13,12 @@ import com.aucloud.commons.pojo.dto.AccountAssetsRecordQuery;
 import com.aucloud.commons.pojo.dto.AcountRechargeDTO;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +49,7 @@ public class AssetsService {
                 .eq(AccountAssets::getAccountId, withdrawDTO.getAccountId())
                 .eq(AccountAssets::getAccountType, withdrawDTO.getAccountType())
                 .eq(AccountAssets::getCurrencyId, withdrawDTO.getCurrencyId())
-                .oneOpt().orElseGet(() -> createNewAssets(withdrawDTO.getAccountId(), withdrawDTO.getAccountType(), withdrawDTO.getCurrencyId()));
+                .oneOpt().orElseGet(() -> createNewAssets(withdrawDTO.getAccountId(), withdrawDTO.getAccountType(), withdrawDTO.getCurrencyChain(),withdrawDTO.getCurrencyId()));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
         BigDecimal amount = withdrawDTO.getAmount();
         BigDecimal fee = withdrawDTO.getFee();
@@ -80,7 +83,7 @@ public class AssetsService {
                 .eq(AccountAssets::getAccountId, dto.getAccountId())
                 .eq(AccountAssets::getAccountType, dto.getAccountType())
                 .eq(AccountAssets::getCurrencyId, dto.getCurrencyEnum().id)
-                .oneOpt().orElseGet(() -> createNewAssets(dto.getAccountId(), dto.getAccountType(), dto.getCurrencyEnum().id));
+                .oneOpt().orElseGet(() -> createNewAssets(dto.getAccountId(), dto.getAccountType(), dto.getChainEnum().id ,dto.getCurrencyEnum().id));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
         acountAssets.setBalance(balance.add(dto.getAmount()));
         acountAssetsService.saveOrUpdate(acountAssets);
@@ -98,11 +101,27 @@ public class AssetsService {
         acountAssetsRecordService.save(acountAssetsRecord);
     }
 
-    private AccountAssets createNewAssets(Long accountId, Integer accountType, Integer currencyId) {
+    public List<AccountAssets> creaateAccountAssets(Long accountId, Integer accountType) {
+        List<AccountAssets> assetsList = new ArrayList<>();
+        CurrencyEnum[] values = CurrencyEnum.values();
+        for (CurrencyEnum currencyEnum : values) {
+            String supportChain = currencyEnum.supportChain;
+            String[] split = StringUtils.split(supportChain, ",");
+            for (String s : split) {
+                CurrencyEnum.CurrencyChainEnum chainEnum = CurrencyEnum.CurrencyChainEnum.findById(Integer.parseInt(s));
+                AccountAssets assets = createNewAssets(accountId, accountType, currencyEnum.id, chainEnum.id);
+                assetsList.add(assets);
+            }
+        }
+        return assetsList;
+    }
+
+    private AccountAssets createNewAssets(Long accountId, Integer accountType, Integer currencyId, Integer chain) {
         AccountAssets acountAssets = new AccountAssets();
         acountAssets.setAccountId(accountId);
         acountAssets.setAccountType(accountType);
         acountAssets.setCurrencyId(currencyId);
+        acountAssets.setCurrencyChain(chain);
         acountAssets.setUpdateTime(new Date());
         return acountAssets;
     }
