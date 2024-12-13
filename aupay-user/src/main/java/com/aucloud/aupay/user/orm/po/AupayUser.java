@@ -30,7 +30,7 @@ public class AupayUser implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String userId;
+    private String userCode;
 
     private Integer userType;
 
