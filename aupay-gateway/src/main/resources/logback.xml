@@ -4,7 +4,7 @@
 <!--    <property name="LOG_DIR" value="${logging.path}" />-->
     <!-- 定义日志格式  -->
 <!--    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%-30.30logger{30}] %msg%n"/>-->
-    <property name="LOG_HOME" value="/app/logs/gateway"/>
+    <property name="LOG_HOME" value="/app/logs"/>
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

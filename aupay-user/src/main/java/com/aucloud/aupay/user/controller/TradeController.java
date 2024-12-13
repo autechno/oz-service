@@ -1,6 +1,7 @@
-package com.aucloud.aupay.trade.controller;
+package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.trade.service.WithdrawService;
+import com.aucloud.aupay.user.service.TradeService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TradeController {
 
     @Autowired
-    private WithdrawService withdrawService;
+    private TradeService tradeService;
 
     @PostMapping(value = "withdraw")
 //    @Operation(value = OperationEnum.WITHDRAW,handler = DefaultOperationHandler.class)
     public Result<String> withdraw(@RequestBody WithdrawDTO withdrawDTO) {
-        String tradeNo = withdrawService.withdraw(withdrawDTO);
+        String tradeNo = tradeService.withdraw(withdrawDTO);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),tradeNo);
     }
 }

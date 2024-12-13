@@ -50,8 +50,8 @@ spring:
             - Path=/chain-eth/**
           filters:
             - StripPrefix=1
-        - id: admin
-          uri: lb://service-admin
+        - id: aupay-admin
+          uri: lb://aupay-admin
           predicates:
             - Path=/admin/**
           filters:
@@ -68,8 +68,8 @@ spring:
             - Path=/wallet/**
           filters:
             - StripPrefix=1
-        - id: operate
-          uri: lb://service-operate
+        - id: aupay-operate
+          uri: lb://aupay-operate
           predicates:
             - Path=/operate/**
           filters:

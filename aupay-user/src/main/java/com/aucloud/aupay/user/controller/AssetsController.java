@@ -31,11 +31,11 @@ public class AssetsController {
     @Autowired
     private FastSwapService fastSwapService;
 
-    @PostMapping("/withdraw/pre-deduct")
-    public Result<String> preDeduct(@RequestBody WithdrawDTO withdrawDTO) {
-        String tradeNo = assetsService.preDeduct(withdrawDTO);
-        return Result.returnResult(ResultCodeEnum.SUCCESS, tradeNo);
-    }
+//    @PostMapping("/withdraw/pre-deduct")
+//    public Result<String> preDeduct(@RequestBody WithdrawDTO withdrawDTO) {
+//        String tradeNo = assetsService.preDeduct(withdrawDTO);
+//        return Result.returnResult(ResultCodeEnum.SUCCESS, tradeNo);
+//    }
 
     @PostMapping("recharge")
     public Result<?> recharge(@RequestBody AcountRechargeDTO dto) {
