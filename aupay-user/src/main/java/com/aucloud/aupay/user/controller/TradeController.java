@@ -1,6 +1,5 @@
 package com.aucloud.aupay.user.controller;
 
-import com.aucloud.aupay.trade.service.WithdrawService;
 import com.aucloud.aupay.user.service.TradeService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
