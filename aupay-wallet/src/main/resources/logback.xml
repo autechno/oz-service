@@ -30,10 +30,14 @@
     </appender>
 
     <!-- 日志输出级别 -->
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="com.hl.magic" level="INFO"/>
-    <root level="INFO">
-<!--        <appender-ref ref="CONSOLE"/>-->
-        <appender-ref ref="FILE"/>
-    </root>
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
 </configuration>

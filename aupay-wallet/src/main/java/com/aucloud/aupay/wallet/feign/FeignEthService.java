@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 
-@FeignClient("aupay-eth")
+@FeignClient(value = "aupay-eth", contextId = "feignEthService")
 public interface FeignEthService {
 
     @RequestMapping("createWallet")

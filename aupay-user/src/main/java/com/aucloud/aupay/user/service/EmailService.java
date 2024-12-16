@@ -11,7 +11,7 @@ import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.utils.IpUtils;
 import com.aucloud.aupay.validate.enums.OperationEnum;
 import com.aucloud.aupay.validate.enums.VerifyMethod;
-import com.aucloud.commons.service.CodeCheckService;
+import com.aucloud.aupay.validate.service.CodeCheckService;
 import com.aucloud.aupay.validate.service.OperationTokenService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

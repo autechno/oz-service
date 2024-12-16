@@ -10,7 +10,7 @@ COPY target/aupay-user-3.0.jar aupay-user.jar
 ENV SPRING_PROFILES_ACTIVE=test
 
 # 暴露端口
-EXPOSE 8084
+EXPOSE 8080
 
 # 启动应用
 ENTRYPOINT ["java", "-jar", "aupay-user.jar"]

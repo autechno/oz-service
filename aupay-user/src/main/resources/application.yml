@@ -16,8 +16,14 @@ spring:
   main:
     allow-circular-references: true
 
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
 
+logging:
+  config: classpath:logback.xml
+  level:
+    com.alibaba.nacos: info
+    root: info

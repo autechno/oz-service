@@ -25,6 +25,7 @@ mybatis-plus:
 logging:
   config: classpath:logback.xml
   level:
+    com.alibaba.nacos: info
     root: info
 #    com.baomidou.mybatisplus: debug
 #    com.aucloud.aupay.dao.mapper: debug

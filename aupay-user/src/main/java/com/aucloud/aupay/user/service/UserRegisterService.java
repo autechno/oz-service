@@ -8,7 +8,7 @@ import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
 import com.aucloud.commons.pojo.dto.RegisterDTO;
-import com.aucloud.commons.service.CodeCheckService;
+import com.aucloud.aupay.validate.service.CodeCheckService;
 import com.aucloud.commons.utils.Encryption;
 import com.aucloud.commons.utils.IpUtils;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;

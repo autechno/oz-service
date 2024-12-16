@@ -4,7 +4,7 @@
 <!--    <property name="LOG_DIR" value="${logging.path}" />-->
     <property name="LOG_HOME" value="logs/aupay-user"/>
 
-    <springProfile name="test">
+    <springProfile name="dev">
         <property name="LOG_HOME" value="logs/aupay-user"/>
     </springProfile>
 
@@ -35,14 +35,14 @@
     </appender>
 
     <!-- 日志输出级别 -->
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="com.hl.magic" level="INFO"/>
-    <root level="INFO">
-        <springProfile name="test">
-        <appender-ref ref="CONSOLE"/>
-        </springProfile>
-        <springProfile name="!test">
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="INFO">
             <appender-ref ref="FILE"/>
-        </springProfile>
-    </root>
+        </root>
+    </springProfile>
 </configuration>

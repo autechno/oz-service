@@ -21,6 +21,7 @@ spring:
 logging:
   config: classpath:logback.xml
   level:
+    com.alibaba.nacos: info
     root: info
 
 #wallet:

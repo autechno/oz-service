@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@FeignClient("aupay-eth")
+@FeignClient(value = "aupay-eth", contextId = "feignEthContractService")
 public interface FeignEthContractService {
 
     @RequestMapping("contract/getBalance")

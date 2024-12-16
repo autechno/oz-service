@@ -69,7 +69,7 @@ public class AupayWalletManagerService {
             privateKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new ServiceRuntimeException(ResultCodeEnum.FAIL);
+//            throw new ServiceRuntimeException(ResultCodeEnum.FAIL);
         }
     }
 

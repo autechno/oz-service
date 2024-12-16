@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.aucloud</groupId>
+            <groupId>com.aucloud.aupay</groupId>
             <artifactId>commons</artifactId>
             <version>3.0</version>
         </dependency>
@@ -33,7 +33,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>org.apache.httpcomponents.client5</groupId>-->
+<!--            <artifactId>httpclient5</artifactId>-->
+<!--            <version>5.3.1</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

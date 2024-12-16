@@ -1,14 +1,12 @@
-package com.aucloud.commons.service;
+package com.aucloud.aupay.validate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class CodeCheckService {
 
     @Autowired

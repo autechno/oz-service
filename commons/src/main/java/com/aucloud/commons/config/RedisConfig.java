@@ -1,22 +1,16 @@
 package com.aucloud.commons.config;
 
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.nio.charset.StandardCharsets;
 
 //@EnableConfigurationProperties(RedisProperties.class)
-@Configuration
+@AutoConfiguration
 public class RedisConfig {
 
 //    @Autowired
@@ -46,14 +40,15 @@ public class RedisConfig {
 //        return poolConfig;
 //    }
 
-    @Bean
-    public JedisPool jedisPool(JedisConnectionFactory redisConnectionFactory) {
-        GenericObjectPoolConfig<Jedis> poolConfig = redisConnectionFactory.getPoolConfig();
-        RedisStandaloneConfiguration standaloneConfiguration = redisConnectionFactory.getStandaloneConfiguration();
-        RedisPassword password = standaloneConfiguration.getPassword();
-        String pwdString = new String(password.get());
-        return new JedisPool(poolConfig, standaloneConfiguration.getHostName(), standaloneConfiguration.getPort(), 2000, pwdString);
-    }
+//    @Bean
+//    public JedisPool jedisPool(JedisConnectionFactory redisConnectionFactory) {
+//        GenericObjectPoolConfig<Jedis> poolConfig = redisConnectionFactory.getPoolConfig();
+//        poolConfig.setJmxEnabled(false);
+//        RedisStandaloneConfiguration standaloneConfiguration = redisConnectionFactory.getStandaloneConfiguration();
+//        RedisPassword password = standaloneConfiguration.getPassword();
+//        String pwdString = new String(password.get());
+//        return new JedisPool(poolConfig, standaloneConfiguration.getHostName(), standaloneConfiguration.getPort(), 2000, pwdString);
+//    }
 
     @Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory factory){
