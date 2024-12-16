@@ -1,6 +1,6 @@
 package com.aucloud.aupay.security.oauth2;
 
-import com.aucloud.commons.service.CodeCheckService;
+import com.aucloud.aupay.validate.service.CodeCheckService;
 import com.aucloud.commons.utils.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

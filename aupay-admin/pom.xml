@@ -9,7 +9,7 @@
         <version>3.0</version>
     </parent>
 
-    <groupId>com.aucloud.aupay.admin</groupId>
+    <groupId>com.aucloud.aupay</groupId>
     <artifactId>aupay-admin</artifactId>
 
     <properties>
@@ -20,20 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aucloud</groupId>
+            <groupId>com.aucloud.aupay</groupId>
             <artifactId>commons</artifactId>
             <version>3.0</version>
         </dependency>

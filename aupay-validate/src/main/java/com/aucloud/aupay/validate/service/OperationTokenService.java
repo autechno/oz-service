@@ -1,14 +1,13 @@
 package com.aucloud.aupay.validate.service;
 
-import com.aucloud.commons.constant.Terminal;
 import com.aucloud.aupay.validate.enums.OperationEnum;
 import com.aucloud.aupay.validate.enums.VerifyMethod;
+import com.aucloud.commons.constant.Terminal;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -22,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  * 使用IP地址、拥有者和业务类型参与进行缓存
  */
 @Slf4j
-@Component
 public class OperationTokenService {
 
     @Autowired

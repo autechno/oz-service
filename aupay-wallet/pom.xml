@@ -21,7 +21,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.aucloud</groupId>
+            <groupId>com.aucloud.aupay</groupId>
             <artifactId>commons</artifactId>
             <version>3.0</version>
         </dependency>
