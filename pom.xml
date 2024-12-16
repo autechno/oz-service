@@ -24,6 +24,8 @@
         <module>aupay-operate</module>
         <module>aupay-validate</module>
         <module>aupay-gateway</module>
+        <module>chain-btc</module>
+        <module>chain-tron</module>
     </modules>
 
     <properties>
