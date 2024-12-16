@@ -24,6 +24,7 @@
         <module>aupay-operate</module>
         <module>aupay-validate</module>
         <module>aupay-gateway</module>
+        <module>aupay-event</module>
     </modules>
 
     <properties>
@@ -32,6 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.version>2022.0.5</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0</spring.cloud.alibaba.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
     </properties>
 
     <dependencyManagement>
@@ -49,6 +51,12 @@
                 <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

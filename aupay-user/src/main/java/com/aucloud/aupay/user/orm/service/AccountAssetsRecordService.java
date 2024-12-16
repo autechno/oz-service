@@ -1,7 +1,7 @@
 package com.aucloud.aupay.user.orm.service;
 
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
-import com.aucloud.aupay.user.orm.mapper.AcountAssetsRecordMapper;
+import com.aucloud.aupay.user.orm.mapper.AccountAssetsRecordMapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-12-06
  */
 @Service
-public class AcountAssetsRecordService extends ServiceImpl<AcountAssetsRecordMapper, AccountAssetsRecord> implements IService<AccountAssetsRecord> {
+public class AccountAssetsRecordService extends ServiceImpl<AccountAssetsRecordMapper, AccountAssetsRecord> implements IService<AccountAssetsRecord> {
 
 }

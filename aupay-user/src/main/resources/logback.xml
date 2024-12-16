@@ -2,7 +2,12 @@
 <configuration debug="false">
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
 <!--    <property name="LOG_DIR" value="${logging.path}" />-->
-    <property name="LOG_HOME" value="/app/logs"/>
+    <property name="LOG_HOME" value="logs/aupay-user"/>
+
+    <springProfile name="test">
+        <property name="LOG_HOME" value="logs/aupay-user"/>
+    </springProfile>
+
     <!-- 定义日志格式  -->
 <!--    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%-30.30logger{30}] %msg%n"/>-->
     <!-- 控制台输出 -->
@@ -33,7 +38,11 @@
     <logger name="org.springframework" level="INFO"/>
     <logger name="com.hl.magic" level="INFO"/>
     <root level="INFO">
-        <!--<appender-ref ref="CONSOLE"/>-->
-        <appender-ref ref="FILE"/>
+        <springProfile name="test">
+        <appender-ref ref="CONSOLE"/>
+        </springProfile>
+        <springProfile name="!test">
+            <appender-ref ref="FILE"/>
+        </springProfile>
     </root>
 </configuration>

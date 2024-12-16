@@ -2,8 +2,8 @@ package com.aucloud.aupay.user.service;
 
 import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
-import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
-import com.aucloud.aupay.user.orm.service.AcountAssetsService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsRecordService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsService;
 import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.TradeType;
 import com.aucloud.commons.exception.ServiceRuntimeException;
@@ -22,9 +22,9 @@ import java.util.List;
 public class FastSwapService {
 
     @Autowired
-    private AcountAssetsService acountAssetsService;
+    private AccountAssetsService acountAssetsService;
     @Autowired
-    private AcountAssetsRecordService acountAssetsRecordService;
+    private AccountAssetsRecordService acountAssetsRecordService;
 
     @Transactional
     public void fastSwap(FastSwapDTO fastSwapDTO) {

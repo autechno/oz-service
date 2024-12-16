@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
  * @author yang.li@autech.one
  * @since 2024-12-06
  */
-public interface AcountAssetsRecordMapper extends BaseMapper<AccountAssetsRecord> {
+public interface AccountAssetsRecordMapper extends BaseMapper<AccountAssetsRecord> {
 
 
     Page<AccountAssetsRecord> getAssetsRecords(Page<AccountAssetsRecord> page, @Param("conditions") AccountAssetsRecordQuery recordQuery);

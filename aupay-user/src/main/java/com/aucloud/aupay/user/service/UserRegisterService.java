@@ -2,7 +2,6 @@ package com.aucloud.aupay.user.service;
 
 import com.aucloud.aupay.user.feign.FeignWalletService;
 import com.aucloud.aupay.user.orm.po.AupayUser;
-import com.aucloud.aupay.user.orm.service.AcountAssetsService;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.commons.constant.*;
 import com.aucloud.commons.exception.ServiceRuntimeException;
@@ -84,7 +83,7 @@ public class UserRegisterService {
         if (!result.getCode().equals(ResultCodeEnum.SUCCESS.getCode())) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL.getLabel_zh_cn(), ResultCodeEnum.FAIL.getCode());
         }
-        assetsService.creaateAccountAssets(user.getId(), AccountType.USER);
+        assetsService.createAccountAssets(user.getId(), AccountType.USER);
 
         registerDTO.setRelationEmail(user.getEmail());
         registerDTO.setRelationUsername(user.getUsername());
