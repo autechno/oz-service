@@ -5,6 +5,8 @@ import com.aucloud.aupay.security.token.TokenHeadInfo;
 import com.aucloud.aupay.security.token.TokenInfo;
 import com.aucloud.aupay.user.orm.mapper.AupayUserMapper;
 import com.aucloud.aupay.user.orm.po.AupayUser;
+import com.aucloud.aupay.user.orm.po.AupayUserLoginLog;
+import com.aucloud.aupay.user.orm.service.AupayUserLoginLogService;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.commons.constant.ApplicationConstant;
 import com.aucloud.commons.constant.ResultCodeEnum;
@@ -30,6 +32,8 @@ public class LoginService {
     private SecurityTokenHandler securityTokenHandler;
     @Autowired
     private AupayUserService aupayUserService;
+    @Autowired
+    private AupayUserLoginLogService aupayUserLoginLogService;
 
     public String login(UserLoginDTO userLoginDTO) {
         String ipAddress = IpUtils.getIpAddress();
@@ -45,14 +49,17 @@ public class LoginService {
         if (!loginCheck) {
             throw new ServiceRuntimeException(ResultCodeEnum.USER_AUTH_FAILURE.getLabel_zh_cn(), ResultCodeEnum.USER_AUTH_FAILURE.getCode());
         }
-        String userId = aupayUser.getUserId();
+        String userId = aupayUser.getId().toString();
         String tokenHead = TokenHeadInfo.getTokenHead(new Date(System.currentTimeMillis() + 86400000));
         String tokenInfo = TokenInfo.makeTokenInfo(userId, Terminal.USER);
         String token = securityTokenHandler.genToken(userId, tokenHead, tokenInfo, ApplicationConstant.SECRET);//签名头 签名体 密钥
-        aupayUser.setLoginTime(new Date());
-        aupayUserService.updateById(aupayUser);
-
+//        aupayUser.setLoginTime(new Date());
+//        aupayUserService.updateById(aupayUser);
 //        saveUserLoginLog(userId);
+        AupayUserLoginLog aupayUserLoginLog = new AupayUserLoginLog();
+        aupayUserLoginLog.setUserId(aupayUser.getId());
+        aupayUserLoginLog.setLoginIp(IpUtils.getIpAddress());
+        aupayUserLoginLogService.save(aupayUserLoginLog);
 
 //        if(StringUtils.isNotBlank(userLoginDTO.getThirdPartMerchant())) {
 //            Map<String,String> map = new HashMap<>();

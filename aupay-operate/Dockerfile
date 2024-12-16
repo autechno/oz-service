@@ -5,10 +5,12 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # 将项目构建的 JAR 文件复制到镜像
-COPY target/aupay-wallet-3.0.jar aupay-wallet.jar
+COPY target/aupay-operate-3.0.jar aupay-operate.jar
+
+ENV SPRING_PROFILES_ACTIVE=test
 
 # 暴露端口
 EXPOSE 8080
 
 # 启动应用
-ENTRYPOINT ["java", "-jar", "aupay-wallet.jar"]
+ENTRYPOINT ["java", "-jar", "aupay-operate.jar"]

@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUserId(String userId) {
         LambdaQueryWrapper<AupayUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AupayUser::getUserId, userId);
+        queryWrapper.eq(AupayUser::getId, userId);
         AupayUser user = aupayUserService.getOne(queryWrapper);
         if (user == null) {
             throw new ResourceNotFoundException("User", "userId", userId);

@@ -18,7 +18,6 @@
         <module>chain-eth</module>
         <module>commons</module>
         <module>aupay-wallet</module>
-        <module>aupay-trade</module>
         <module>aupay-commons-db</module>
         <module>aupay-user</module>
         <module>aupay-admin</module>

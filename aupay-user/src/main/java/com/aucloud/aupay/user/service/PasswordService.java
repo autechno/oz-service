@@ -75,7 +75,7 @@ public class PasswordService {
             }
         }
         AupayUser aupayUserUpd = new AupayUser();
-        aupayUserUpd.setUserId(userByUsername.getUserId());
+        aupayUserUpd.setId(userByUsername.getId());
         aupayUserUpd.setPassword(Encryption.getSaltMD5(resetPasswordDTO.getPassword()));
         return aupayUserService.updateById(aupayUserUpd);
     }

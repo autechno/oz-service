@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
-    private Long id;
-    private String userId;
+    private Long id;//存个人id
+    private Integer accountType;// 个人、企业
+    private String userId;//// 个人的存 user表id，企业的 存企业表id
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -33,7 +34,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
         return new UserPrincipal(
                 user.getId(),
-                user.getUserId(),
+                user.getUserCode(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities

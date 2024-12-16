@@ -74,7 +74,7 @@ public class UserRegisterService {
         user.setCreateTime(new Date());
         user.setState(UserState.NORMAL);
         user.setRegIp(IpUtils.getIpAddress());
-        user.setUserId(IdWorker.getIdStr());
+        user.setUserCode(IdWorker.getIdStr());
         boolean b = aupayUserService.save(user);
         if (!b) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL_TO_UPDATE.getLabel_zh_cn(), ResultCodeEnum.FAIL_TO_UPDATE.getCode());
@@ -85,9 +85,10 @@ public class UserRegisterService {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL.getLabel_zh_cn(), ResultCodeEnum.FAIL.getCode());
         }
         assetsService.creaateAccountAssets(user.getId(), AccountType.USER);
+
         registerDTO.setRelationEmail(user.getEmail());
         registerDTO.setRelationUsername(user.getUsername());
-        registerDTO.setRelationUserId(user.getUserId());
+        registerDTO.setRelationUserId(user.getUserCode());
 //        if (registerDTO.getIsBindPay() == 1) {
 //            this.bindOzbetAccount(registerDTO);
 //        }

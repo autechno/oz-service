@@ -7,11 +7,11 @@ WORKDIR /app
 # 将项目构建的 JAR 文件复制到镜像
 COPY target/chain-eth-3.0.jar chain-eth.jar
 
-ENV SERVER_PORT=8102
-ENV SPRING_PROFILES_ACTIVE=test
+#ENV SERVER_PORT=8102
+#ENV SPRING_PROFILES_ACTIVE=test
 
 # 暴露端口
-EXPOSE $SERVER_PORT
+EXPOSE 8080
 
 # 启动应用
-ENTRYPOINT ["java", "-jar", "chain-eth.jar --server.port=$SERVER_PORT --spring.profiles.active=$SPRING_PROFILES_ACTIVE"]
+ENTRYPOINT ["java", "-jar", "chain-eth.jar"]
