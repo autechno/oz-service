@@ -9,9 +9,11 @@ import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.constant.TradeType;
 import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.pojo.PageQuery;
+import com.aucloud.commons.pojo.dto.AccountAssetsQuery;
 import com.aucloud.commons.pojo.dto.AccountAssetsRecordQuery;
 import com.aucloud.commons.pojo.dto.AcountRechargeDTO;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,25 @@ public class AssetsService {
     @Autowired
     private AcountAssetsRecordService acountAssetsRecordService;
 
-    public List<AccountAssets> getAccountAssets(Long accountId, Integer accountType) {
-        return acountAssetsService.lambdaQuery()
-                .eq(AccountAssets::getAccountId, accountId)
-                .eq(AccountAssets::getAccountType, accountType)
-                .list();
+    public List<AccountAssets> getAccountAssets(AccountAssetsQuery query) {
+        Long accountId = query.getAccountId();
+        Integer accountType = query.getAccountType();
+        Integer currencyId = query.getCurrencyId();
+        Integer currencyChain = query.getCurrencyChain();
+        LambdaQueryWrapper<AccountAssets> queryWrapper = new LambdaQueryWrapper<>();
+        if (accountId != null) {
+            queryWrapper.eq(AccountAssets::getAccountId, accountId);
+        }
+        if (accountType != null) {
+            queryWrapper.eq(AccountAssets::getAccountType, accountType);
+        }
+        if (currencyId != null) {
+            queryWrapper.eq(AccountAssets::getCurrencyId, currencyId);
+        }
+        if (currencyChain != null) {
+            queryWrapper.eq(AccountAssets::getCurrencyChain, currencyChain);
+        }
+        return acountAssetsService.list(queryWrapper);
     }
 
     public Page<AccountAssetsRecord> getAssetsRecords(PageQuery<AccountAssetsRecordQuery> pageQuery) {

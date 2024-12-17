@@ -12,10 +12,7 @@ import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.PageQuery;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.bo.TokenInfo;
-import com.aucloud.commons.pojo.dto.AccountAssetsRecordQuery;
-import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
-import com.aucloud.commons.pojo.dto.AcountRechargeDTO;
-import com.aucloud.commons.pojo.dto.FastSwapDTO;
+import com.aucloud.commons.pojo.dto.*;
 import com.aucloud.commons.pojo.vo.AccountAssetsVo;
 import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -58,14 +55,18 @@ public class AssetsController {
         return Result.returnResult(ResultCodeEnum.SUCCESS);
     }
 
-
     @RequestMapping(value = "getAssetsInfo",method = RequestMethod.GET)
-//    @Operation(value = OperationEnum.GET_ASSETS_INFO,handler = DefaultOperationHandler.class)
-    public Result<List<AccountAssetsVo>> getAssetsInfo() {
+    public Result<List<AccountAssetsVo>> getAssetsInfo(@RequestParam(value = "currencyId", required = false) Integer currencyId,
+                                                       @RequestParam(value = "currencyChain", required = false) Integer currencyChain) {
         TokenInfo tokenInfoObject = UserRequestHeaderContextHandler.getTokenInfo();
         Long accountId = tokenInfoObject.getAccountId();
         Integer accountType = tokenInfoObject.getAccountType();
-        List<AccountAssets> accountAssets = assetsService.getAccountAssets(accountId, accountType);
+        AccountAssetsQuery query = new AccountAssetsQuery();
+        query.setAccountId(accountId);
+        query.setAccountType(accountType);
+        query.setCurrencyId(currencyId);
+        query.setCurrencyChain(currencyChain);
+        List<AccountAssets> accountAssets = assetsService.getAccountAssets(query);
         Result<List<AccountChainWalletDto>> accountWallets = feignWalletService.getAccountWallets(accountId, accountType);
         List<AccountChainWalletDto> wallets = accountWallets.getData();
         Map<Integer, String> walletmaps = wallets.stream().collect(Collectors.toMap(AccountChainWalletDto::getCurrencyChain, AccountChainWalletDto::getWalletAddress));
@@ -93,6 +94,18 @@ public class AssetsController {
         conditions.setAccountId(accountId);
         conditions.setAccountType(accountType);
         Page<AccountAssetsRecord> assetsRecords = assetsService.getAssetsRecords(pageQuery);
+        List<AccountAssetsRecord> records = assetsRecords.getRecords();
+        records.forEach(a -> {
+            String tradeNo = a.getTradeNo();
+            PageQuery<WithdrawRecordQuery> query = new PageQuery<>();
+            WithdrawRecordQuery wdconditions = new WithdrawRecordQuery();
+            wdconditions.setAccountId(accountId);
+            wdconditions.setAccountType(accountType);
+            wdconditions.setTradeNo(tradeNo);
+            wdconditions.setAssetsId(a.getAssetsId());
+            query.setConditions(wdconditions);
+            feignWalletService.listWithdrawRecord(query);
+        });
         return Result.returnResult(ResultCodeEnum.SUCCESS,assetsRecords);
     }
 

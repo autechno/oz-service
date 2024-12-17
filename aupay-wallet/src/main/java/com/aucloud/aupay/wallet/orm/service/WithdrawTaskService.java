@@ -9,9 +9,13 @@ import com.aucloud.aupay.wallet.orm.po.WalletTransferRecord;
 import com.aucloud.aupay.wallet.orm.po.WithdrawTask;
 import com.aucloud.commons.constant.*;
 import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.PageQuery;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.WithdrawBatchDto;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
+import com.aucloud.commons.pojo.dto.WithdrawRecordQuery;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +56,39 @@ public class WithdrawTaskService extends ServiceImpl<WithdrawTaskMapper, Withdra
         task.setCurrencyId(withdrawDTO.getCurrencyId());
         task.setCurrencyChain(withdrawDTO.getCurrencyChain());
         task.setToAddress(withdrawDTO.getToAddress());
-        task.setTradeNo(withdrawDTO.getTradeNo());
         task.setCreateTime(new Date());
         task.setStatus(WithdrawTaskStatus.PENDING);
+        task.setTradeNo(withdrawDTO.getTradeNo());
+        task.setAssetsId(withdrawDTO.getAssetsId());
+        task.setAccountId(withdrawDTO.getAccountId());
+        task.setAccountType(withdrawDTO.getAccountType());
         save(task);
     }
+
+    public Page<WithdrawTask> listWithdrawTaskRecords(PageQuery<WithdrawRecordQuery> pageQuery) {
+        LambdaQueryWrapper<WithdrawTask> queryWrapper = new LambdaQueryWrapper<>();
+        WithdrawRecordQuery query = pageQuery.getConditions();
+        Long accountId = query.getAccountId();
+        if (accountId != null) {
+            queryWrapper.eq(WithdrawTask::getAccountId, accountId);
+        }
+        Integer accountType = query.getAccountType();
+        if (accountType != null) {
+            queryWrapper.eq(WithdrawTask::getAccountType, accountType);
+        }
+        Long assetsId = query.getAssetsId();
+        if (assetsId != null) {
+            queryWrapper.eq(WithdrawTask::getAssetsId, assetsId);
+        }
+        String tradeNo = query.getTradeNo();
+        if (tradeNo != null) {
+            queryWrapper.eq(WithdrawTask::getTradeNo, tradeNo);
+        }
+        Page<WithdrawTask> page = new Page<>(pageQuery.getPageNo(), pageQuery.getPageSize());
+        return page(page, queryWrapper);
+    }
+
+
 
     private static final int once_max = 10;
 

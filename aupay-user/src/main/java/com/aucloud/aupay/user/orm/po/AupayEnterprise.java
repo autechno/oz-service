@@ -63,5 +63,8 @@ public class AupayEnterprise implements Serializable {
      */
     private Integer del;
 
+    private String enterpriseLogo;//logo
+    private String businessScope;//经营范围
+    private String qualifications;//资质
 
 }

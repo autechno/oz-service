@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "aupay-user")
 public interface FeignUserService {
 
-    @PostMapping("/assets/recharge")
+    @PostMapping("assets/recharge")
     Result<?> recharge(@RequestBody AcountRechargeDTO dto);
 
-    @GetMapping("/withdraw/finish")
+    @GetMapping("assets/withdraw/finish")
     Result<?> withdrawFinish(@RequestParam("tradeNo") String tradeNo);
 }

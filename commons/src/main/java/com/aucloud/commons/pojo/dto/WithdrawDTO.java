@@ -19,5 +19,6 @@ public class WithdrawDTO {
 
     private BigDecimal fee;
     private String tradeNo;
+    private Long assetsId;
 
 }

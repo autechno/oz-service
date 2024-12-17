@@ -33,6 +33,8 @@ public class WithdrawTask implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    private Long accountId;
+    private Integer accountType;
     /**
      * 资产表id
      */
