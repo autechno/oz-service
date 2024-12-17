@@ -5,14 +5,21 @@ import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
 import com.aucloud.aupay.user.service.AssetsService;
 import com.aucloud.aupay.user.service.FastSwapService;
+import com.aucloud.aupay.validate.annotations.Operation;
+import com.aucloud.aupay.validate.enums.OperationEnum;
+import com.aucloud.aupay.validate.enums.VerifyMethod;
+import com.aucloud.aupay.validate.service.SecurityTokenHandler;
 import com.aucloud.commons.constant.ResultCodeEnum;
+import com.aucloud.commons.constant.SystemProperties;
 import com.aucloud.commons.pojo.PageQuery;
 import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.pojo.dto.*;
 import com.aucloud.commons.pojo.vo.AccountAssetsVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -30,6 +37,8 @@ public class AssetsController {
     private FeignWalletService feignWalletService;
     @Autowired
     private FastSwapService fastSwapService;
+    @Autowired
+    private SecurityTokenHandler securityTokenHandler;
 
 //    @PostMapping("/withdraw/pre-deduct")
 //    public Result<String> preDeduct(@RequestBody WithdrawDTO withdrawDTO) {
@@ -52,9 +61,10 @@ public class AssetsController {
 
     @RequestMapping(value = "getAssetsInfo",method = RequestMethod.GET)
 //    @Operation(value = OperationEnum.GET_ASSETS_INFO,handler = DefaultOperationHandler.class)
-    public Result<List<AccountAssetsVo>> getAssetsInfo() {
-        Integer accountId = 0;
-        Integer accountType = 0;
+    public Result<List<AccountAssetsVo>> getAssetsInfo(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token) {
+        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+        Long accountId = tokenInfoObject.getAccountId();
+        Integer accountType = tokenInfoObject.getAccountType();
         List<AccountAssets> accountAssets = assetsService.getAccountAssets(accountId, accountType);
         Result<List<AccountChainWalletDto>> accountWallets = feignWalletService.getAccountWallets(accountId, accountType);
         List<AccountChainWalletDto> wallets = accountWallets.getData();
@@ -73,27 +83,31 @@ public class AssetsController {
         return Result.returnResult(ResultCodeEnum.SUCCESS,list);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "getAssetsRecords",method = RequestMethod.GET)
-//    @Operation(value = OperationEnum.GET_ASSETS_INFO,handler = DefaultOperationHandler.class)
-    public Result<Page<AccountAssetsRecord>> getAssetsRecords(@RequestBody PageQuery<AccountAssetsRecordQuery> pageQuery) {
-        Integer accountId = 0;
-        Integer accountType = 0;
+    public Result<Page<AccountAssetsRecord>> getAssetsRecords(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token,@RequestBody PageQuery<AccountAssetsRecordQuery> pageQuery) {
+        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+        Long accountId = tokenInfoObject.getAccountId();
+        Integer accountType = tokenInfoObject.getAccountType();
+        AccountAssetsRecordQuery conditions = pageQuery.getConditions();
+        conditions.setAccountId(accountId);
+        conditions.setAccountType(accountType);
         Page<AccountAssetsRecord> assetsRecords = assetsService.getAssetsRecords(pageQuery);
         return Result.returnResult(ResultCodeEnum.SUCCESS,assetsRecords);
     }
 
-//    @RequestMapping(value = "getCurrencyAssetsInfo",method = RequestMethod.GET)
-////    @Operation(value = OperationEnum.GET_CURRENCY_ASSETS_INFO,handler = DefaultOperationHandler.class)
-//    public Result getCurrencyAssetsInfo(@RequestParam Integer currencyId, @RequestParam(defaultValue = "0") Integer currencyChain) {
-//        Integer accountId = 0;
-//        Integer accountType = 0;
-//        UserAssetsVo userAssetsVo = userService.getCurrencyAssetsInfo(userId, currencyId, currencyChain);
-//        return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),userAssetsVo);
-//    }
 
+    //闪兑
     @RequestMapping(value = "fastSwap",method = RequestMethod.POST)
-//    @Operation(value = OperationEnum.FAST_SWAP,handler = DefaultOperationHandler.class)
-    public Result<Boolean> fastSwap(@RequestBody FastSwapDTO fastSwapDTO) {
+    @Operation(operation = OperationEnum.FAST_SWAP, verifyMethods = {VerifyMethod.ASSETSPASSWORD,VerifyMethod.GOOGLEAUTHENICATOR})
+    public Result<Boolean> fastSwap(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token,@RequestBody FastSwapDTO fastSwapDTO) {
+        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+        Long accountId = tokenInfoObject.getAccountId();
+        Integer accountType = tokenInfoObject.getAccountType();
+        Long userId = tokenInfoObject.getUserId();
+        fastSwapDTO.setAccountId(accountId);
+        fastSwapDTO.setAccountType(accountType);
+        fastSwapDTO.setEmployeeId(userId);
         fastSwapService.fastSwap(fastSwapDTO);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),true);
     }

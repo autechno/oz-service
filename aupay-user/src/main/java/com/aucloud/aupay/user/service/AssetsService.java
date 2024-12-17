@@ -31,7 +31,7 @@ public class AssetsService {
     @Autowired
     private AcountAssetsRecordService acountAssetsRecordService;
 
-    public List<AccountAssets> getAccountAssets(Integer accountId, Integer accountType) {
+    public List<AccountAssets> getAccountAssets(Long accountId, Integer accountType) {
         return acountAssetsService.lambdaQuery()
                 .eq(AccountAssets::getAccountId, accountId)
                 .eq(AccountAssets::getAccountType, accountType)

@@ -1,5 +1,6 @@
 package com.aucloud.aupay.user.feign;
 
+import com.aucloud.aupay.db.orm.po.FastSwapRecord;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
@@ -16,8 +17,11 @@ public interface FeignWalletService {
     Result<?> generateWithdrawTask(@RequestBody WithdrawDTO withdrawDTO);
 
     @RequestMapping(value = "wallet/getAccountWallets",method = RequestMethod.GET)
-    Result<List<AccountChainWalletDto>> getAccountWallets(@RequestParam Integer accountId, @RequestParam Integer accountType);
+    Result<List<AccountChainWalletDto>> getAccountWallets(@RequestParam Long accountId, @RequestParam Integer accountType);
 
     @RequestMapping("wallet/generateAccountWallet")
     Result<List<AccountChainWalletDto>> generateAccountWallet(@RequestParam Long accountId, @RequestParam Integer accountType);
+
+    @PostMapping("/trade/generateFastSwapRecord")
+    Result<String> generateFastSwapRecord(@RequestBody FastSwapRecord fastSwapRecord);
 }

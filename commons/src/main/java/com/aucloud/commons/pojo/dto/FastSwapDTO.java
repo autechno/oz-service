@@ -7,6 +7,10 @@ import java.math.BigDecimal;
 @Data
 public class FastSwapDTO {
 
+    private Long accountId;
+    private Integer accountType;
+    private Long employeeId;
+
     private Integer outCurrencyId;
     private Integer outChain;
 

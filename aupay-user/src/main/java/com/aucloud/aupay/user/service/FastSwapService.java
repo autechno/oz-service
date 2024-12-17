@@ -1,12 +1,16 @@
 package com.aucloud.aupay.user.service;
 
+import com.aucloud.aupay.db.orm.po.FastSwapRecord;
+import com.aucloud.aupay.user.feign.FeignWalletService;
 import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
 import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
 import com.aucloud.aupay.user.orm.service.AcountAssetsService;
 import com.aucloud.commons.constant.CurrencyEnum;
+import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.constant.TradeType;
 import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.FastSwapDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +29,13 @@ public class FastSwapService {
     private AcountAssetsService acountAssetsService;
     @Autowired
     private AcountAssetsRecordService acountAssetsRecordService;
+    @Autowired
+    private FeignWalletService feignWalletService;
 
     @Transactional
     public void fastSwap(FastSwapDTO fastSwapDTO) {
-        Integer accountId = 0;
-        Integer accountType = 0;
+        Long accountId = fastSwapDTO.getAccountId();
+        Integer accountType = fastSwapDTO.getAccountType();
         BigDecimal transOutAmount = fastSwapDTO.getTransOutAmount();
         BigDecimal transInAmount = fastSwapDTO.getTransInAmount();
 
@@ -43,9 +49,6 @@ public class FastSwapService {
         CurrencyEnum inCurrency = CurrencyEnum.findById(inCurrencyId);
         CurrencyEnum.CurrencyChainEnum inChain = CurrencyEnum.CurrencyChainEnum.findById(inCurrencyChain);
 
-        if (outCurrency == null || outChain == null || inCurrency == null || inChain == null) {
-            throw new ServiceRuntimeException("不支持的币种及链");
-        }
         if (outCurrency==inCurrency && outChain == inChain) {
             throw new ServiceRuntimeException("闪兑币不能是同一种币及链");
         }
@@ -64,21 +67,51 @@ public class FastSwapService {
                 in = accountAssets;
             }
         }
-        if (out==null || in==null) {
-            throw new ServiceRuntimeException("闪兑币不能是同一种币及链");
+        if (out==null) {
+            throw new ServiceRuntimeException(ResultCodeEnum.INSUFFICIENT_BALANCE);
         }
 
         BigDecimal totalOut = transOutAmount.add(fastSwapDTO.getFeeAmount());
         BigDecimal outBalance = out.getBalance();
         if (outBalance.compareTo(totalOut) < 0) {
-            throw new ServiceRuntimeException("闪兑币不能是同一种币及链");
+            throw new ServiceRuntimeException(ResultCodeEnum.INSUFFICIENT_BALANCE);
         }
+        if (in == null) {
+            in = new AccountAssets();
+            in.setBalance(BigDecimal.ZERO);
+            in.setUpdateTime(new Date());
+            in.setFreezeBalance(BigDecimal.ZERO);
+            in.setAccountId(accountId);
+            in.setAccountType(accountType);
+            in.setCurrencyChain(inCurrencyId);
+            in.setCurrencyChain(inCurrencyChain);
+            acountAssetsService.save(in);
+        }
+
+        //fast_swap_record表
+        FastSwapRecord record = new FastSwapRecord();
+        record.setAccountId(accountId);
+        record.setAccountType(accountType);
+        record.setOperatorId(fastSwapDTO.getEmployeeId());
+        record.setCashOutAssetsId(out.getId());
+        record.setCashOutCurrencyId(outCurrencyId);
+        record.setCashOutChain(outCurrencyChain);
+        record.setCashOutAmount(transOutAmount);
+        record.setCashInAssetsId(in.getId());
+        record.setCashInCurrencyId(inCurrencyId);
+        record.setCashInChain(inCurrencyChain);
+        record.setCashInAmount(transInAmount);
+        record.setFee(fastSwapDTO.getFeeAmount());
+        record.setStatus(0);
+        Result<String> result = feignWalletService.generateFastSwapRecord(record);
+        String tradeNo = result.getData();
+
         out.setBalance(outBalance.subtract(totalOut));
         out.setUpdateTime(new Date());
         acountAssetsService.updateById(out);
 
         BigDecimal inbalance = in.getBalance();
-        in.setBalance(inbalance.add(fastSwapDTO.getTransInAmount()));
+        in.setBalance(inbalance.add(transInAmount));
         in.setUpdateTime(new Date());
         acountAssetsService.updateById(in);
 
@@ -91,6 +124,7 @@ public class FastSwapService {
         inRecord.setBeforeBalance(inbalance);
         inRecord.setStatus(0);
         inRecord.setTradeType(TradeType.FAST_SWAP.getCode());
+        inRecord.setTradeNo(tradeNo);
         inRecord.setFinishTime(new Date());
         acountAssetsRecordService.save(inRecord);
         AccountAssetsRecord outRecord = new AccountAssetsRecord();
@@ -101,85 +135,10 @@ public class FastSwapService {
         outRecord.setAfterBalance(out.getBalance());
         outRecord.setBeforeBalance(outBalance);
         outRecord.setStatus(0);
+        outRecord.setTradeNo(tradeNo);
         outRecord.setTradeType(TradeType.FAST_SWAP.getCode());
         outRecord.setFee(fastSwapDTO.getFeeAmount());
         outRecord.setFinishTime(new Date());
         acountAssetsRecordService.save(outRecord);
-
-
-
-//        String userId = SecurityTokenHandler.getTokenInfoObject().getId();
-//        AupayUser user = userDao.getUserById(userId);
-//        Result<List<AupayDigitalCurrencyWallet>> result = walletClient.getUserWalletByUserId(userId);
-//        List<AupayDigitalCurrencyWallet> userWallets = result.getData();
-//        AtomicReference<AupayDigitalCurrencyWallet> outWallet = new AtomicReference<>();
-//        AtomicReference<AupayDigitalCurrencyWallet> inWallet = new AtomicReference<>();
-//        userWallets.forEach(wallet -> {
-//            if (wallet.getCurrencyId().equals(inCurrencyId) && wallet.getCurrencyChain().equals(inChain)) {
-//                inWallet.set(wallet);
-//            }
-//            if (wallet.getCurrencyId().equals(outCurrencyId) && wallet.getCurrencyChain().equals(outChain)) {
-//                outWallet.set(wallet);
-//            }
-//        });
-
-//        log.info("outWallet:{}", JSON.toJSONString(outWallet.get()));
-//        log.info("inWallet:{}", JSON.toJSONString(inWallet.get()));
-
-//        if (outWallet.get().getBalance().compareTo(transOutAmount)<0) {
-//            //余额不足
-//            return;
-//        }
-        /*BigDecimal swapFee = transOutAmount.multiply(BigDecimal.ZERO);//闪兑手续费
-        //汇率转换
-        AtomicReference<BigDecimal> inRate = new AtomicReference<>(BigDecimal.ZERO);
-        AtomicReference<BigDecimal> outRate = new AtomicReference<>(BigDecimal.ZERO);
-        String inSymbol = getSymbol(fastSwapDTO.getInCurrencyId(), fastSwapDTO.getInChain());
-        String outSymbol = getSymbol(fastSwapDTO.getOutCurrencyId(), fastSwapDTO.getOutChain());
-        if (StringUtils.equalsIgnoreCase(inSymbol,"usdt")) {
-            inRate.set(BigDecimal.ONE);
-        } else if (StringUtils.equalsIgnoreCase(inSymbol,"ozc")) {
-            inRate.set(BigDecimal.ONE);
-        } else if (StringUtils.equalsIgnoreCase(inSymbol,"toto")) {
-            inRate.set(BigDecimal.ONE);
-        }
-        if (StringUtils.equalsIgnoreCase(outSymbol,"usdt")) {
-            outRate.set(BigDecimal.ONE);
-        } else if (StringUtils.equalsIgnoreCase(outSymbol,"ozc")) {
-            outRate.set(BigDecimal.ONE);
-        } else if (StringUtils.equalsIgnoreCase(outSymbol,"toto")) {
-            outRate.set(BigDecimal.ONE);
-        }
-        if (outRate.get().equals(BigDecimal.ZERO) || inRate.get().equals(BigDecimal.ZERO)) {
-            Result<List<HuobiTicker>> result1 = sysClient.getUSDTTickers();
-            List<HuobiTicker> usdtTickers = result1.getData();
-            usdtTickers.forEach(huobiTicker -> {
-                BigDecimal bid = huobiTicker.getBid();
-                if (inRate.get().equals(BigDecimal.ZERO)) {
-                    if (huobiTicker.getSymbol().equalsIgnoreCase(inSymbol)) {
-                        inRate.set(bid);
-                    }
-                }
-                if (outRate.get().equals(BigDecimal.ZERO)) {
-                    if (huobiTicker.getSymbol().equalsIgnoreCase(outSymbol)) {
-                        outRate.set(bid);
-                    }
-                }
-            });
-        }
-        if (outRate.get().equals(BigDecimal.ZERO) || inRate.get().equals(BigDecimal.ZERO)) {
-            throw new ServiceRuntimeException("币种转换异常");
-        }
-        BigDecimal rate = inRate.get().divide(outRate.get(), 4, RoundingMode.HALF_UP);
-
-        BigDecimal transInAmount = transOutAmount.subtract(swapFee).multiply(rate);//汇率转换*/
-
-
-
-//        AupayUserAssetsChangeRecord outAssetsChangeRecord = userAssetsChange(userId, outCurrencyId, outChain, transOutAmount.negate(), null, TradeType.FAST_SWAP, null, null);
-//        walletClient.addBalance(outWallet.get().getWalletId().toString(), transOutAmount.negate());
-//        AupayUserAssetsChangeRecord inAssetsChangeRecord = userAssetsChange(userId, inCurrencyId, inChain, transInAmount, null, TradeType.FAST_SWAP, null, null);
-//        walletClient.addBalance(inWallet.get().getWalletId().toString(), transInAmount);
-
     }
 }

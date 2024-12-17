@@ -42,7 +42,7 @@ public class IndexController {
     }
 
     @RequestMapping(value = "getAccountWallets",method = RequestMethod.GET)
-    public Result<List<AccountChainWalletDto>> getAccountWallets(@RequestParam Integer accountId, @RequestParam Integer accountType) {
+    public Result<List<AccountChainWalletDto>> getAccountWallets(@RequestParam Long accountId, @RequestParam Integer accountType) {
         List<AccountChainWallet> list = acountChainWalletService.lambdaQuery()
                 .eq(AccountChainWallet::getAcountId, accountId)
                 .eq(AccountChainWallet::getAcountType, accountType)
