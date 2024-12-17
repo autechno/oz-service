@@ -79,11 +79,11 @@ public class UserRegisterService {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL_TO_UPDATE.getLabel_zh_cn(), ResultCodeEnum.FAIL_TO_UPDATE.getCode());
         }
         //生成用户资产信息
-        Result<List<AccountChainWalletDto>> result = feignWalletService.generateAccountWallet(user.getId(), AccountType.USER);
+        Result<List<AccountChainWalletDto>> result = feignWalletService.generateAccountWallet(user.getId(), AccountType.INDIVIDUAL_USER);
         if (!result.getCode().equals(ResultCodeEnum.SUCCESS.getCode())) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL.getLabel_zh_cn(), ResultCodeEnum.FAIL.getCode());
         }
-        assetsService.creaateAccountAssets(user.getId(), AccountType.USER);
+        assetsService.creaateAccountAssets(user.getId(), AccountType.INDIVIDUAL_USER);
 
         registerDTO.setRelationEmail(user.getEmail());
         registerDTO.setRelationUsername(user.getUsername());
