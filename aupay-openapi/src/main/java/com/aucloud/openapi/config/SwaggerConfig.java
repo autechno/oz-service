@@ -12,7 +12,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-            .group("springboot")  // 设置 API 文档分组名称
+            .group("aupay")  // 设置 API 文档分组名称
             .pathsToMatch("/api/**")  // 只生成 /api/** 路径下的 API 文档
             .build();
     }
@@ -21,11 +21,11 @@ public class SwaggerConfig {
     @Bean
     public Info apiInfo() {
         return new Info()
-            .title("Spring Boot API Documentation")
-            .description("API Documentation for Spring Boot Application")
+            .title("AuPay API Documentation")
+            .description("API Documentation for AuPay Application")
             .version("1.0")
             .contact(new io.swagger.v3.oas.models.info.Contact()
-                .name("Your Name")
-                .email("dev@"));
+                .name("AuCloud OpenAPI")
+                .email("dev@autech.one"));
     }
 }
