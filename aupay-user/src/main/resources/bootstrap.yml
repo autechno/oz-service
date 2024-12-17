@@ -19,6 +19,10 @@ spring:
             refresh: true
           - data-id: common-rabbitmq.yml
             refresh: true
+        extension-configs:
+          - data-id: ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+            group: ${spring.profiles.active}
+            refresh: true
         import-check:
           enabled: false
   profiles:
