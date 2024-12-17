@@ -1,13 +1,14 @@
 package com.aucloud.aupay.user.orm.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -44,7 +45,7 @@ public class AccountAddressFrequently implements Serializable {
     /**
      * 地址类型
      */
-    private Integer type;
+    private Boolean white;
 
     /**
      * 币种
@@ -69,12 +70,15 @@ public class AccountAddressFrequently implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 删除状态
      */
     private Integer del;
 
+    private Integer status;
+    private Boolean lock;
+    private Date unlockTime;
 
 }
