@@ -7,6 +7,7 @@ import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.utils.IpUtils;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -26,8 +27,6 @@ public class OperationValidateAop {
 
     @Autowired
     private OperationTokenService operationTokenService;
-    @Autowired
-    private SecurityTokenHandler securityTokenHandler;
 
     @Before(value = "@annotation(com.aucloud.aupay.validate.annotations.Operation)")
     public void operationVerify(JoinPoint pjp) throws NoSuchMethodException {
@@ -48,7 +47,7 @@ public class OperationValidateAop {
 
         String ip = IpUtils.getIpAddress();
 
-        TokenInfo tokenInfo = securityTokenHandler.getTokenInfoObject(request.getHeader("token"));
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
         Long userId = tokenInfo.getUserId();
         OperationEnum operationEnum = operation.operation();
         for (VerifyMethod verifyMethod : verifyMethods) {

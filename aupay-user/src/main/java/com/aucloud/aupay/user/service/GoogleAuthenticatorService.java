@@ -4,11 +4,13 @@ import com.aucloud.aupay.user.orm.po.AupayUser;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.utils.GoogleAuthenticator;
 import com.aucloud.commons.utils.IpUtils;
 import com.aucloud.aupay.validate.enums.OperationEnum;
 import com.aucloud.aupay.validate.enums.VerifyMethod;
 import com.aucloud.aupay.validate.service.OperationTokenService;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,8 @@ public class GoogleAuthenticatorService {
     }
 
     public Map<String, String> bindGoogleAuth() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser userById = aupayUserService.getById(userId);
         if (StringUtils.isNotBlank(userById.getGoogleSecret())) {
             throw new ServiceRuntimeException("已经绑定过谷歌验证", ResultCodeEnum.FAIL.getCode());
@@ -56,8 +58,8 @@ public class GoogleAuthenticatorService {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL_TO_VERIFY.getLabel_zh_cn(), ResultCodeEnum.FAIL_TO_VERIFY.getCode());
         }
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
 
         AupayUser aupayUser = new AupayUser();
         aupayUser.setId(userId);
@@ -69,8 +71,8 @@ public class GoogleAuthenticatorService {
     }
 
     public void resetGoogleAuth() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser user = aupayUserService.getById(userId);
 
         LambdaUpdateWrapper<AupayUser> updateWrapper = new LambdaUpdateWrapper<>();
@@ -84,8 +86,8 @@ public class GoogleAuthenticatorService {
 
     public String verifyGoogle(Long googleCode, Integer operationId) {
         OperationEnum operationEnum = OperationEnum.getById(operationId);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser userById = aupayUserService.getById(userId);
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
         googleAuthenticator.setWindowSize(1);

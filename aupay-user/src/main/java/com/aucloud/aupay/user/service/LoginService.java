@@ -52,9 +52,7 @@ public class LoginService {
         String tokenHead = TokenHeadInfo.getTokenHead(new Date(System.currentTimeMillis() + 86400000));
         String tokenInfo = TokenInfo.makeTokenInfo(aupayUser.getId(), Terminal.USER);
         String token = securityTokenHandler.genToken(aupayUser.getId(), tokenHead, tokenInfo, ApplicationConstant.SECRET);//签名头 签名体 密钥
-//        aupayUser.setLoginTime(new Date());
-//        aupayUserService.updateById(aupayUser);
-//        saveUserLoginLog(userId);
+
         AupayUserLoginLog aupayUserLoginLog = new AupayUserLoginLog();
         aupayUserLoginLog.setUserId(aupayUser.getId());
         aupayUserLoginLog.setLoginIp(IpUtils.getIpAddress());

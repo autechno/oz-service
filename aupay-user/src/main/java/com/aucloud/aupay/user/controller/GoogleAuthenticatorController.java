@@ -3,6 +3,8 @@ package com.aucloud.aupay.user.controller;
 import com.aucloud.aupay.user.service.GoogleAuthenticatorService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.bo.TokenInfo;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +23,8 @@ public class GoogleAuthenticatorController {
     @RequestMapping(value = "haveGoogleAuth", method = RequestMethod.GET)
 //    @Operation(value = OperationEnum.GET_USER_INFO,handler = DefaultOperationHandler.class)
     public Result<Boolean> haveGoogleAuth() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         boolean b = googleAuthenticatorService.haveGoogleAuth(userId);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(), b);
     }

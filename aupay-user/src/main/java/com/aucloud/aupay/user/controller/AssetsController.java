@@ -8,14 +8,16 @@ import com.aucloud.aupay.user.service.FastSwapService;
 import com.aucloud.aupay.validate.annotations.Operation;
 import com.aucloud.aupay.validate.enums.OperationEnum;
 import com.aucloud.aupay.validate.enums.VerifyMethod;
-import com.aucloud.aupay.validate.service.SecurityTokenHandler;
 import com.aucloud.commons.constant.ResultCodeEnum;
-import com.aucloud.commons.constant.SystemProperties;
 import com.aucloud.commons.pojo.PageQuery;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.bo.TokenInfo;
-import com.aucloud.commons.pojo.dto.*;
+import com.aucloud.commons.pojo.dto.AccountAssetsRecordQuery;
+import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
+import com.aucloud.commons.pojo.dto.AcountRechargeDTO;
+import com.aucloud.commons.pojo.dto.FastSwapDTO;
 import com.aucloud.commons.pojo.vo.AccountAssetsVo;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +39,6 @@ public class AssetsController {
     private FeignWalletService feignWalletService;
     @Autowired
     private FastSwapService fastSwapService;
-    @Autowired
-    private SecurityTokenHandler securityTokenHandler;
 
 //    @PostMapping("/withdraw/pre-deduct")
 //    public Result<String> preDeduct(@RequestBody WithdrawDTO withdrawDTO) {
@@ -61,8 +61,8 @@ public class AssetsController {
 
     @RequestMapping(value = "getAssetsInfo",method = RequestMethod.GET)
 //    @Operation(value = OperationEnum.GET_ASSETS_INFO,handler = DefaultOperationHandler.class)
-    public Result<List<AccountAssetsVo>> getAssetsInfo(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token) {
-        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+    public Result<List<AccountAssetsVo>> getAssetsInfo() {
+        TokenInfo tokenInfoObject = UserRequestHeaderContextHandler.getTokenInfo();
         Long accountId = tokenInfoObject.getAccountId();
         Integer accountType = tokenInfoObject.getAccountType();
         List<AccountAssets> accountAssets = assetsService.getAccountAssets(accountId, accountType);
@@ -85,8 +85,8 @@ public class AssetsController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "getAssetsRecords",method = RequestMethod.GET)
-    public Result<Page<AccountAssetsRecord>> getAssetsRecords(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token,@RequestBody PageQuery<AccountAssetsRecordQuery> pageQuery) {
-        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+    public Result<Page<AccountAssetsRecord>> getAssetsRecords(@RequestBody PageQuery<AccountAssetsRecordQuery> pageQuery) {
+        TokenInfo tokenInfoObject = UserRequestHeaderContextHandler.getTokenInfo();
         Long accountId = tokenInfoObject.getAccountId();
         Integer accountType = tokenInfoObject.getAccountType();
         AccountAssetsRecordQuery conditions = pageQuery.getConditions();
@@ -96,12 +96,11 @@ public class AssetsController {
         return Result.returnResult(ResultCodeEnum.SUCCESS,assetsRecords);
     }
 
-
     //闪兑
     @RequestMapping(value = "fastSwap",method = RequestMethod.POST)
     @Operation(operation = OperationEnum.FAST_SWAP, verifyMethods = {VerifyMethod.ASSETSPASSWORD,VerifyMethod.GOOGLEAUTHENICATOR})
-    public Result<Boolean> fastSwap(@RequestHeader(SystemProperties.REQUEST_HEADER_TOKEN_LOGGED_USER) String token,@RequestBody FastSwapDTO fastSwapDTO) {
-        TokenInfo tokenInfoObject = securityTokenHandler.getTokenInfoObject(token);
+    public Result<Boolean> fastSwap(@RequestBody FastSwapDTO fastSwapDTO) {
+        TokenInfo tokenInfoObject = UserRequestHeaderContextHandler.getTokenInfo();
         Long accountId = tokenInfoObject.getAccountId();
         Integer accountType = tokenInfoObject.getAccountType();
         Long userId = tokenInfoObject.getUserId();

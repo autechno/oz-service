@@ -5,8 +5,10 @@ import com.aucloud.aupay.user.orm.service.AupayUserLoginLogService;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.pojo.dto.UserInfoDTO;
 import com.aucloud.commons.pojo.vo.UserInfoVo;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +22,9 @@ public class BaseInfoController {
     private AupayUserLoginLogService aupayUserLoginLogService;
 
     @RequestMapping(value = "getUserInfo",method = RequestMethod.GET)
-//    @Operation(value = OperationEnum.GET_USER_INFO,handler = DefaultOperationHandler.class)
     public Result<UserInfoVo> getUserInfo() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         UserInfoVo userInfo = aupayUserService.getUserInfo(userId);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),userInfo);
     }
@@ -31,8 +32,6 @@ public class BaseInfoController {
     @RequestMapping(value = "setUserInfo",method = RequestMethod.PUT)
 //    @Operation(value = OperationEnum.SET_USER_INFO,handler = DefaultOperationHandler.class)
     public Result<?> setUserInfo(@RequestBody UserInfoDTO userInfoDTO) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
         aupayUserService.setUserInfo(userInfoDTO);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),null);
     }
@@ -40,16 +39,16 @@ public class BaseInfoController {
     @RequestMapping(value = "switchWhiteAddress",method = RequestMethod.PUT)
 //    @Operation(value = OperationEnum.SWITCH_WHITE_ADDRESS,handler = DefaultOperationHandler.class)
     public Result<?> switchWhiteAddress() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         aupayUserService.switchWhiteAddress(userId);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),null);
     }
     @RequestMapping(value = "getSwitchWhite",method = RequestMethod.PUT)
 //    @Operation(value = OperationEnum.SWITCH_WHITE_ADDRESS,handler = DefaultOperationHandler.class)
     public Result<Integer> getSwitchWhite() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         int switchWhite = aupayUserService.getSwitchWhite(userId);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),switchWhite);
     }
@@ -57,8 +56,8 @@ public class BaseInfoController {
     @RequestMapping(value = "getRecentLoginLog",method = RequestMethod.GET)
 //    @Operation(value = OperationEnum.GET_RECENT_LOGIN_LOG,handler = DefaultOperationHandler.class)
     public Result<AupayUserLoginLog> getRecentLoginLog() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUserLoginLog aupayUserLoginLog = aupayUserLoginLogService.lambdaQuery()
                 .eq(AupayUserLoginLog::getUserId, userId)
                 .orderByDesc(AupayUserLoginLog::getCreateTime)

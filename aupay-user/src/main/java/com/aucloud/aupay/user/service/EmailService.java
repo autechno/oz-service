@@ -8,11 +8,13 @@ import com.aucloud.commons.constant.QueueConstant;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.bo.EmailMessage;
 import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.utils.IpUtils;
 import com.aucloud.aupay.validate.enums.OperationEnum;
 import com.aucloud.aupay.validate.enums.VerifyMethod;
 import com.aucloud.aupay.validate.service.CodeCheckService;
 import com.aucloud.aupay.validate.service.OperationTokenService;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,8 +70,8 @@ public class EmailService {
     public Integer sendEmailCode(Integer operationId) {
         OperationEnum operationEnum = OperationEnum.getById(operationId);
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
 
         AupayUser userById = aupayUserService.getById(userId);
         String email = userById.getEmail();
@@ -84,8 +86,8 @@ public class EmailService {
     }
 
     public String verifyEmail(Integer emailCode, Integer operationId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser userById = aupayUserService.getById(userId);
         String email = userById.getEmail();
         OperationEnum operationEnum = OperationEnum.getById(operationId);
@@ -96,8 +98,8 @@ public class EmailService {
     }
 
     public void sendWithdrawEmailCode() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser userById = aupayUserService.getById(userId);
         String email = userById.getEmail();
         Integer emailCode = codeCheckService.getEmailCode(EmailCodeType.WITHDRAW, email);

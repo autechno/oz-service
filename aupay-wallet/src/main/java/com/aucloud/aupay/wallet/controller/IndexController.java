@@ -5,8 +5,10 @@ import com.aucloud.aupay.wallet.orm.service.AcountChainWalletService;
 import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.pojo.dto.AccountChainWalletDto;
 import com.aucloud.commons.pojo.vo.RechargeInfoVo;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +27,9 @@ public class IndexController {
 
     @RequestMapping(value = "getRechargeInfo",method = RequestMethod.GET)
     public Result<RechargeInfoVo> getRechargeInfo(@RequestParam Integer currencyId, @RequestParam Integer currencyChain) {
-        Long accountId = 0L;
-        Integer accountType = 0;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long accountId = tokenInfo.getAccountId();
+        Integer accountType = tokenInfo.getAccountType();
         CurrencyEnum currencyEnum = CurrencyEnum.findById(currencyId);
         AccountChainWallet accountChainWallet = acountChainWalletService.lambdaQuery()
                 .eq(AccountChainWallet::getAcountId, accountId)

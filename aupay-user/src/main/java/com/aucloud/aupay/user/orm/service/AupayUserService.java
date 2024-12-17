@@ -2,8 +2,10 @@ package com.aucloud.aupay.user.orm.service;
 
 import com.aucloud.aupay.user.orm.mapper.AupayUserMapper;
 import com.aucloud.aupay.user.orm.po.AupayUser;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.pojo.dto.UserInfoDTO;
 import com.aucloud.commons.pojo.vo.UserInfoVo;
+import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -37,8 +39,8 @@ public class AupayUserService extends ServiceImpl<AupayUserMapper, AupayUser> im
     }
 
     public void setUserInfo(UserInfoDTO userInfoDTO) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = 0L;
+        TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
+        Long userId = tokenInfo.getUserId();
         AupayUser aupayUser = new AupayUser();
         aupayUser.setId(userId);
         aupayUser.setHeadPortrait(userInfoDTO.getHeadPortrait());
