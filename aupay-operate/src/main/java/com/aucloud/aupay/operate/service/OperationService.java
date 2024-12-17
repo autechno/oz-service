@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.aucloud.commons.constant.RedisCacheKeys;
-import com.aucloud.commons.entity.HuobiTicker;
+import com.aucloud.commons.pojo.bo.HuobiTicker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;

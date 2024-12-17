@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDetails loadUserByUserId(String userId) {
+    public UserDetails loadUserByUserId(Long userId) {
         LambdaQueryWrapper<AupayUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AupayUser::getId, userId);
         AupayUser user = aupayUserService.getOne(queryWrapper);

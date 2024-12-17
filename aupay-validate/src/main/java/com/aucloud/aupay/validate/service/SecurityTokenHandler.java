@@ -1,32 +1,33 @@
-package com.aucloud.aupay.security.token;
+package com.aucloud.aupay.validate.service;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.aucloud.commons.constant.ApplicationConstant;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.exception.ServiceRuntimeException;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.utils.Encryption;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Slf4j
-@Service
 public class SecurityTokenHandler {
 
     private static final String CACHE_NAME = "aupay-authentication-token-";
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public SecurityTokenHandler(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public String secret2ozbet(String jsonString) {
         return Encryption.encryptByBase64Url(jsonString);
     }
 
-    public String genToken(String id,String jsonStringHead,String jsonStringInfo,String secret){
+    public String genToken(Long id,String jsonStringHead,String jsonStringInfo,String secret){
         String tokenInit = Encryption.encryptByBase64Url(jsonStringHead)+"."+Encryption.encryptByBase64Url(jsonStringInfo);
         String tokenSign = Encryption.sha256_HMAC(tokenInit,secret);
         String token = tokenInit+"."+tokenSign;

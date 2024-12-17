@@ -1,9 +1,8 @@
 package com.aucloud.aupay.security;
 
-import com.aucloud.aupay.security.config.AppProperties;
-import com.aucloud.aupay.security.token.SecurityTokenHandler;
-import com.aucloud.aupay.security.token.TokenHeadInfo;
-import com.aucloud.aupay.security.token.TokenInfo;
+import com.aucloud.aupay.validate.service.SecurityTokenHandler;
+import com.aucloud.commons.pojo.bo.TokenHeadInfo;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.constant.ApplicationConstant;
 import com.aucloud.commons.constant.Terminal;
 import org.slf4j.Logger;
@@ -32,8 +31,8 @@ public class TokenProvider {
 
         String userId = userPrincipal.getUserId();
         String tokenHead = TokenHeadInfo.getTokenHead(new Date(System.currentTimeMillis() + 86400000));
-        String tokenInfo = TokenInfo.makeTokenInfo(userId, Terminal.USER);
-        return securityTokenHandler.genToken(userId, tokenHead, tokenInfo, ApplicationConstant.SECRET);
+        String tokenInfo = TokenInfo.makeTokenInfo(Long.parseLong(userId), Terminal.USER);
+        return securityTokenHandler.genToken(Long.parseLong(userId), tokenHead, tokenInfo, ApplicationConstant.SECRET);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.security.UserPrincipal;
-import com.aucloud.aupay.security.token.SecurityTokenHandler;
+import com.aucloud.aupay.validate.service.SecurityTokenHandler;
 import com.aucloud.aupay.user.orm.po.AupayUser;
 import com.aucloud.aupay.user.service.LoginService;
 import com.aucloud.aupay.user.service.UserRegisterService;

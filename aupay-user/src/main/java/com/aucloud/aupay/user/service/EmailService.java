@@ -6,7 +6,7 @@ import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.commons.constant.EmailCodeType;
 import com.aucloud.commons.constant.QueueConstant;
 import com.aucloud.commons.constant.ResultCodeEnum;
-import com.aucloud.commons.entity.EmailMessage;
+import com.aucloud.commons.pojo.bo.EmailMessage;
 import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.utils.IpUtils;
 import com.aucloud.aupay.validate.enums.OperationEnum;
@@ -92,7 +92,7 @@ public class EmailService {
         if (!codeCheckService.checkEmailCode(operationEnum.name(), email, emailCode.toString())) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL_TO_VERIFY.getLabel_zh_cn(), ResultCodeEnum.FAIL_TO_VERIFY.getCode());
         }
-        return operationTokenService.signToken(VerifyMethod.EMAIL, operationEnum, userId.toString(), IpUtils.getIpAddress());
+        return operationTokenService.signToken(VerifyMethod.EMAIL, operationEnum, userId, IpUtils.getIpAddress());
     }
 
     public void sendWithdrawEmailCode() {

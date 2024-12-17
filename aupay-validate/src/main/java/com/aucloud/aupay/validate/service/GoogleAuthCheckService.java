@@ -2,5 +2,5 @@ package com.aucloud.aupay.validate.service;
 
 public interface GoogleAuthCheckService {
 
-    boolean ifCheck(Long id);
+    boolean ifCheck(Long userId);
 }

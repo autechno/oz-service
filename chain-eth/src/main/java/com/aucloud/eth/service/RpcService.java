@@ -2,7 +2,7 @@ package com.aucloud.eth.service;
 
 import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.TxStatus;
-import com.aucloud.commons.entity.TxInfo;
+import com.aucloud.commons.pojo.bo.TxInfo;
 import com.aucloud.commons.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

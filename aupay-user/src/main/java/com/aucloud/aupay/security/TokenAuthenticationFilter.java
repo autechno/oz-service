@@ -1,7 +1,7 @@
 package com.aucloud.aupay.security;
 
-import com.aucloud.aupay.security.token.SecurityTokenHandler;
-import com.aucloud.aupay.security.token.TokenInfo;
+import com.aucloud.aupay.validate.service.SecurityTokenHandler;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(token)) {
                 TokenInfo tokenInfo = securityTokenHandler.getTokenInfoObject(token);
-                UserDetails userDetails = customUserDetailsService.loadUserByUserId(tokenInfo.getId());
+                UserDetails userDetails = customUserDetailsService.loadUserByUserId(tokenInfo.getUserId());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

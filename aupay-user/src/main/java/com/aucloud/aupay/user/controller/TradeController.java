@@ -1,6 +1,9 @@
 package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.user.service.TradeService;
+import com.aucloud.aupay.validate.annotations.Operation;
+import com.aucloud.aupay.validate.enums.OperationEnum;
+import com.aucloud.aupay.validate.enums.VerifyMethod;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.WithdrawDTO;
@@ -17,8 +20,8 @@ public class TradeController {
     @Autowired
     private TradeService tradeService;
 
+    @Operation(permission = "xxoo", operation = OperationEnum.WITHDRAW, verifyMethods = {VerifyMethod.GOOGLEAUTHENICATOR})
     @PostMapping(value = "withdraw")
-//    @Operation(value = OperationEnum.WITHDRAW,handler = DefaultOperationHandler.class)
     public Result<String> withdraw(@RequestBody WithdrawDTO withdrawDTO) {
         String tradeNo = tradeService.withdraw(withdrawDTO);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(),tradeNo);

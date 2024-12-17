@@ -45,7 +45,7 @@ public class PasswordService {
         }
         OperationEnum operationEnum = OperationEnum.getById(operationId);
 
-        return operationTokenService.signToken(VerifyMethod.ASSETSPASSWORD, operationEnum, String.valueOf(userId), IpUtils.getIpAddress());
+        return operationTokenService.signToken(VerifyMethod.ASSETSPASSWORD, operationEnum, userId, IpUtils.getIpAddress());
     }
 
     public void updateAssetsPassword(UpdatePasswordDTO updatePasswordDTO) {

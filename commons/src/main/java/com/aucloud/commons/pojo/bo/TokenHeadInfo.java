@@ -1,4 +1,4 @@
-package com.aucloud.aupay.security.token;
+package com.aucloud.commons.pojo.bo;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;

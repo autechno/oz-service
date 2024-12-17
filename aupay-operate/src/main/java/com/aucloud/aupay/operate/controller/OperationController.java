@@ -3,7 +3,7 @@ package com.aucloud.aupay.operate.controller;
 
 import com.aucloud.aupay.operate.service.OperationService;
 import com.aucloud.commons.constant.ResultCodeEnum;
-import com.aucloud.commons.entity.HuobiTicker;
+import com.aucloud.commons.pojo.bo.HuobiTicker;
 import com.aucloud.commons.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

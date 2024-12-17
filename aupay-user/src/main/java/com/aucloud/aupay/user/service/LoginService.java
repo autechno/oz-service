@@ -1,8 +1,8 @@
 package com.aucloud.aupay.user.service;
 
-import com.aucloud.aupay.security.token.SecurityTokenHandler;
-import com.aucloud.aupay.security.token.TokenHeadInfo;
-import com.aucloud.aupay.security.token.TokenInfo;
+import com.aucloud.aupay.validate.service.SecurityTokenHandler;
+import com.aucloud.commons.pojo.bo.TokenHeadInfo;
+import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.aupay.user.orm.mapper.AupayUserMapper;
 import com.aucloud.aupay.user.orm.po.AupayUser;
 import com.aucloud.aupay.user.orm.po.AupayUserLoginLog;
@@ -49,10 +49,9 @@ public class LoginService {
         if (!loginCheck) {
             throw new ServiceRuntimeException(ResultCodeEnum.USER_AUTH_FAILURE.getLabel_zh_cn(), ResultCodeEnum.USER_AUTH_FAILURE.getCode());
         }
-        String userId = aupayUser.getId().toString();
         String tokenHead = TokenHeadInfo.getTokenHead(new Date(System.currentTimeMillis() + 86400000));
-        String tokenInfo = TokenInfo.makeTokenInfo(userId, Terminal.USER);
-        String token = securityTokenHandler.genToken(userId, tokenHead, tokenInfo, ApplicationConstant.SECRET);//签名头 签名体 密钥
+        String tokenInfo = TokenInfo.makeTokenInfo(aupayUser.getId(), Terminal.USER);
+        String token = securityTokenHandler.genToken(aupayUser.getId(), tokenHead, tokenInfo, ApplicationConstant.SECRET);//签名头 签名体 密钥
 //        aupayUser.setLoginTime(new Date());
 //        aupayUserService.updateById(aupayUser);
 //        saveUserLoginLog(userId);

@@ -1,4 +1,4 @@
-package com.aucloud.commons.entity;
+package com.aucloud.commons.pojo.bo;
 
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;

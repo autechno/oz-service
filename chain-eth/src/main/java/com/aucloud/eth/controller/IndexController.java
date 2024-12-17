@@ -1,7 +1,7 @@
 package com.aucloud.eth.controller;
 
 import com.aucloud.commons.constant.ResultCodeEnum;
-import com.aucloud.commons.entity.TxInfo;
+import com.aucloud.commons.pojo.bo.TxInfo;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.eth.service.RpcService;
 import com.aucloud.eth.service.ScanTransactionService;

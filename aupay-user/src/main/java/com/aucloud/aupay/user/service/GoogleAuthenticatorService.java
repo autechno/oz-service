@@ -93,6 +93,6 @@ public class GoogleAuthenticatorService {
         if (!b) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL_TO_VERIFY.getLabel_zh_cn(), ResultCodeEnum.FAIL_TO_VERIFY.getCode());
         }
-        return operationTokenService.signToken(VerifyMethod.GOOGLEAUTHENICATOR, operationEnum, String.valueOf(userId), IpUtils.getIpAddress());
+        return operationTokenService.signToken(VerifyMethod.GOOGLEAUTHENICATOR, operationEnum, userId, IpUtils.getIpAddress());
     }
 }
