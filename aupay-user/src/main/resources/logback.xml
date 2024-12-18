@@ -2,10 +2,14 @@
 <configuration debug="false">
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
 <!--    <property name="LOG_DIR" value="${logging.path}" />-->
-    <property name="LOG_HOME" value="/opt/logs"/>
+    <property name="LOG_HOME" value="/app/logs"/>
 
     <springProfile name="dev">
         <property name="LOG_HOME" value="logs/aupay-user"/>
+    </springProfile>
+
+    <springProfile name="test">
+        <property name="LOG_HOME" value="logs"/>
     </springProfile>
 
     <!-- 定义日志格式  -->
