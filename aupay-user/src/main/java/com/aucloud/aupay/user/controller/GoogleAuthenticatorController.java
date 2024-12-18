@@ -1,6 +1,7 @@
 package com.aucloud.aupay.user.controller;
 
 import com.aucloud.aupay.user.service.GoogleAuthenticatorService;
+import com.aucloud.aupay.validate.service.GoogleAuthCheckService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.bo.TokenInfo;
@@ -19,13 +20,15 @@ public class GoogleAuthenticatorController {
 
     @Autowired
     private GoogleAuthenticatorService googleAuthenticatorService;
+    @Autowired
+    private GoogleAuthCheckService googleAuthCheckService;
 
     @RequestMapping(value = "haveGoogleAuth", method = RequestMethod.GET)
 //    @Operation(value = OperationEnum.GET_USER_INFO,handler = DefaultOperationHandler.class)
     public Result<Boolean> haveGoogleAuth() {
         TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();
         Long userId = tokenInfo.getUserId();
-        boolean b = googleAuthenticatorService.haveGoogleAuth(userId);
+        boolean b = googleAuthCheckService.haveGoogleAuth(userId);
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(), b);
     }
 

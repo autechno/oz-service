@@ -31,7 +31,7 @@ public class ValidateBeanAutoConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public OperationTokenService operationTokenService(RedisTemplate<String, Object> redisTemplate) {
+    public OperationTokenService operationTokenServiceDefault(RedisTemplate<String, Object> redisTemplate) {
         return new OperationTokenService(redisTemplate);
     }
 }
