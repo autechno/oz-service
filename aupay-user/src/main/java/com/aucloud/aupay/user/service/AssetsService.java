@@ -33,11 +33,25 @@ public class AssetsService {
     @Autowired
     private AccountAssetsRecordService accountAssetsRecordService;
 
-    public List<AccountAssets> getAccountAssets(Integer accountId, Integer accountType) {
-        return accountAssetsService.lambdaQuery()
-                .eq(AccountAssets::getAccountId, accountId)
-                .eq(AccountAssets::getAccountType, accountType)
-                .list();
+    public List<AccountAssets> getAccountAssets(AccountAssetsQuery query) {
+        Long accountId = query.getAccountId();
+        Integer accountType = query.getAccountType();
+        Integer currencyId = query.getCurrencyId();
+        Integer currencyChain = query.getCurrencyChain();
+        LambdaQueryWrapper<AccountAssets> queryWrapper = new LambdaQueryWrapper<>();
+        if (accountId != null) {
+            queryWrapper.eq(AccountAssets::getAccountId, accountId);
+        }
+        if (accountType != null) {
+            queryWrapper.eq(AccountAssets::getAccountType, accountType);
+        }
+        if (currencyId != null) {
+            queryWrapper.eq(AccountAssets::getCurrencyId, currencyId);
+        }
+        if (currencyChain != null) {
+            queryWrapper.eq(AccountAssets::getCurrencyChain, currencyChain);
+        }
+        return accountAssetsService.list(queryWrapper);
     }
 
     public Page<AccountAssetsRecord> getAssetsRecords(PageQuery<AccountAssetsRecordQuery> pageQuery) {
@@ -140,6 +154,6 @@ public class AssetsService {
         BigDecimal freezeBalance = assets.getFreezeBalance() == null ? BigDecimal.ZERO : assets.getFreezeBalance();
         assets.setFreezeBalance(freezeBalance.subtract(amount).subtract(fee));
         assets.setUpdateTime(new Date());
-        acountAssetsService.updateById(assets);
+        accountAssetsService.updateById(assets);
     }
 }

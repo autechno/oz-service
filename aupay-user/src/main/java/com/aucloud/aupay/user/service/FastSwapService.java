@@ -28,14 +28,16 @@ public class FastSwapService {
     @Autowired
     private AccountAssetsService acountAssetsService;
     @Autowired
-    private AccountAssetsRecordService acountAssetsRecordService;
+    private AccountAssetsRecordService accountAssetsRecordService;
     @Autowired
     private FeignWalletService feignWalletService;
+    @Autowired
+    private AccountAssetsService accountAssetsService;
 
     @Transactional
     public void fastSwap(FastSwapDTO fastSwapDTO) {
-        Integer accountId = 0;
-        Integer accountType = 0;
+        Long accountId = fastSwapDTO.getAccountId();
+        Integer accountType = fastSwapDTO.getAccountType();
         BigDecimal transOutAmount = fastSwapDTO.getTransOutAmount();
         BigDecimal transInAmount = fastSwapDTO.getTransInAmount();
 
@@ -85,7 +87,7 @@ public class FastSwapService {
             in.setAccountType(accountType);
             in.setCurrencyChain(inCurrencyId);
             in.setCurrencyChain(inCurrencyChain);
-            acountAssetsService.save(in);
+            accountAssetsService.save(in);
         }
 
         //fast_swap_record表
@@ -126,7 +128,7 @@ public class FastSwapService {
         inRecord.setTradeType(TradeType.FAST_SWAP.getCode());
         inRecord.setTradeNo(tradeNo);
         inRecord.setFinishTime(new Date());
-        acountAssetsRecordService.save(inRecord);
+        accountAssetsRecordService.save(inRecord);
         AccountAssetsRecord outRecord = new AccountAssetsRecord();
         outRecord.setAssetsId(out.getId());
         outRecord.setCurrencyChain(out.getCurrencyChain());
@@ -139,6 +141,6 @@ public class FastSwapService {
         outRecord.setTradeType(TradeType.FAST_SWAP.getCode());
         outRecord.setFee(fastSwapDTO.getFeeAmount());
         outRecord.setFinishTime(new Date());
-        acountAssetsRecordService.save(outRecord);
+        accountAssetsRecordService.save(outRecord);
     }
 }
