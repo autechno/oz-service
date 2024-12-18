@@ -2,19 +2,18 @@ package com.aucloud.aupay.user.service;
 
 import com.aucloud.aupay.user.orm.po.AupayUser;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
+import com.aucloud.aupay.validate.enums.OperationEnum;
+import com.aucloud.aupay.validate.enums.VerifyMethod;
+import com.aucloud.aupay.validate.service.OperationTokenService;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.exception.ServiceRuntimeException;
 import com.aucloud.commons.pojo.bo.TokenInfo;
 import com.aucloud.commons.utils.GoogleAuthenticator;
 import com.aucloud.commons.utils.IpUtils;
-import com.aucloud.aupay.validate.enums.OperationEnum;
-import com.aucloud.aupay.validate.enums.VerifyMethod;
-import com.aucloud.aupay.validate.service.OperationTokenService;
 import com.aucloud.commons.utils.UserRequestHeaderContextHandler;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +28,6 @@ public class GoogleAuthenticatorService {
     @Autowired
     private OperationTokenService operationTokenService;
 
-    public boolean haveGoogleAuth(Long userId) {
-        AupayUser userById = aupayUserService.getById(userId);
-        return userById != null && StringUtils.isNotBlank(userById.getGoogleSecret());
-    }
 
     public Map<String, String> bindGoogleAuth() {
         TokenInfo tokenInfo = UserRequestHeaderContextHandler.getTokenInfo();

@@ -24,12 +24,7 @@ public class OperationTokenService {
 
     public OperationTokenService(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.googleAuthCheckService = new GoogleAuthCheckService() {
-            @Override
-            public boolean ifCheck(Long userId) {
-                return true;
-            }
-        };
+        this.googleAuthCheckService = userId -> false;
     }
     public OperationTokenService(RedisTemplate<String, Object> redisTemplate, GoogleAuthCheckService googleAuthCheckService) {
         this.redisTemplate = redisTemplate;
@@ -57,7 +52,7 @@ public class OperationTokenService {
     }
 
     public boolean nonGoogle(Long userid) {
-        return googleAuthCheckService.ifCheck(userid);
+        return !googleAuthCheckService.haveGoogleAuth(userid);
     }
 
 
