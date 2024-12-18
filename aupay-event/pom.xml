@@ -9,8 +9,7 @@
         <version>3.0</version>
     </parent>
 
-    <groupId>com.aucloud.aupay</groupId>
-    <artifactId>aupay-user</artifactId>
+    <artifactId>aupay-event</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -19,30 +18,30 @@
     </properties>
 
     <dependencies>
+        <!-- Spring Context 和 Spring Core 依赖 -->
         <dependency>
-            <groupId>com.aucloud.aupay</groupId>
-            <artifactId>aupay-validate</artifactId>
-            <version>3.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.aucloud.aupay</groupId>
-            <artifactId>aupay-commons-db</artifactId>
-            <version>3.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
         </dependency>
+        <!-- Spring Scheduler 用于 @Async 注解 -->
         <dependency>
-            <groupId>com.aucloud.aupay</groupId>
-            <artifactId>aupay-openapi</artifactId>
-            <version>3.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
+        <!-- 其他依赖，如Spring Boot Starter（如果你使用的是Spring Boot） -->
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Maven编译插件 -->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
 </project>

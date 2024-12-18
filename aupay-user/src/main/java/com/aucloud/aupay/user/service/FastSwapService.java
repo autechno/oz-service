@@ -4,8 +4,8 @@ import com.aucloud.aupay.db.orm.po.FastSwapRecord;
 import com.aucloud.aupay.user.feign.FeignWalletService;
 import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
-import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
-import com.aucloud.aupay.user.orm.service.AcountAssetsService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsRecordService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsService;
 import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.constant.TradeType;
@@ -26,16 +26,16 @@ import java.util.List;
 public class FastSwapService {
 
     @Autowired
-    private AcountAssetsService acountAssetsService;
+    private AccountAssetsService acountAssetsService;
     @Autowired
-    private AcountAssetsRecordService acountAssetsRecordService;
+    private AccountAssetsRecordService acountAssetsRecordService;
     @Autowired
     private FeignWalletService feignWalletService;
 
     @Transactional
     public void fastSwap(FastSwapDTO fastSwapDTO) {
-        Long accountId = fastSwapDTO.getAccountId();
-        Integer accountType = fastSwapDTO.getAccountType();
+        Integer accountId = 0;
+        Integer accountType = 0;
         BigDecimal transOutAmount = fastSwapDTO.getTransOutAmount();
         BigDecimal transInAmount = fastSwapDTO.getTransInAmount();
 

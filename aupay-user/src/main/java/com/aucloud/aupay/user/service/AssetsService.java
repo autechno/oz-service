@@ -2,8 +2,8 @@ package com.aucloud.aupay.user.service;
 
 import com.aucloud.aupay.user.orm.po.AccountAssets;
 import com.aucloud.aupay.user.orm.po.AccountAssetsRecord;
-import com.aucloud.aupay.user.orm.service.AcountAssetsRecordService;
-import com.aucloud.aupay.user.orm.service.AcountAssetsService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsRecordService;
+import com.aucloud.aupay.user.orm.service.AccountAssetsService;
 import com.aucloud.commons.constant.CurrencyEnum;
 import com.aucloud.commons.constant.ResultCodeEnum;
 import com.aucloud.commons.constant.TradeType;
@@ -29,39 +29,25 @@ import java.util.UUID;
 public class AssetsService {
 
     @Autowired
-    private AcountAssetsService acountAssetsService;
+    private AccountAssetsService accountAssetsService;
     @Autowired
-    private AcountAssetsRecordService acountAssetsRecordService;
+    private AccountAssetsRecordService accountAssetsRecordService;
 
-    public List<AccountAssets> getAccountAssets(AccountAssetsQuery query) {
-        Long accountId = query.getAccountId();
-        Integer accountType = query.getAccountType();
-        Integer currencyId = query.getCurrencyId();
-        Integer currencyChain = query.getCurrencyChain();
-        LambdaQueryWrapper<AccountAssets> queryWrapper = new LambdaQueryWrapper<>();
-        if (accountId != null) {
-            queryWrapper.eq(AccountAssets::getAccountId, accountId);
-        }
-        if (accountType != null) {
-            queryWrapper.eq(AccountAssets::getAccountType, accountType);
-        }
-        if (currencyId != null) {
-            queryWrapper.eq(AccountAssets::getCurrencyId, currencyId);
-        }
-        if (currencyChain != null) {
-            queryWrapper.eq(AccountAssets::getCurrencyChain, currencyChain);
-        }
-        return acountAssetsService.list(queryWrapper);
+    public List<AccountAssets> getAccountAssets(Integer accountId, Integer accountType) {
+        return accountAssetsService.lambdaQuery()
+                .eq(AccountAssets::getAccountId, accountId)
+                .eq(AccountAssets::getAccountType, accountType)
+                .list();
     }
 
     public Page<AccountAssetsRecord> getAssetsRecords(PageQuery<AccountAssetsRecordQuery> pageQuery) {
         AccountAssetsRecordQuery conditions = pageQuery.getConditions();
         Page<AccountAssetsRecord> page = new Page<>(pageQuery.getPageNo(), pageQuery.getPageSize());
-        return acountAssetsRecordService.getBaseMapper().getAssetsRecords(page, conditions);
+        return accountAssetsRecordService.getBaseMapper().getAssetsRecords(page, conditions);
     }
 
     public String preDeduct(WithdrawDTO withdrawDTO) {
-        AccountAssets acountAssets = acountAssetsService.lambdaQuery()
+        AccountAssets acountAssets = accountAssetsService.lambdaQuery()
                 .eq(AccountAssets::getAccountId, withdrawDTO.getAccountId())
                 .eq(AccountAssets::getAccountType, withdrawDTO.getAccountType())
                 .eq(AccountAssets::getCurrencyId, withdrawDTO.getCurrencyId())
@@ -77,32 +63,32 @@ public class AssetsService {
         BigDecimal freezeBalance = acountAssets.getFreezeBalance() == null ? BigDecimal.ZERO : acountAssets.getFreezeBalance();
         acountAssets.setFreezeBalance(freezeBalance.add(deduct));
         acountAssets.setUpdateTime(new Date());
-        acountAssetsService.saveOrUpdate(acountAssets);
+        accountAssetsService.saveOrUpdate(acountAssets);
 
         String tradeNo = UUID.randomUUID().toString();
-        AccountAssetsRecord acountAssetsRecord = new AccountAssetsRecord();
-        acountAssetsRecord.setAssetsId(acountAssets.getId());
-        acountAssetsRecord.setTradeNo(tradeNo);
-        acountAssetsRecord.setAmount(amount);
-        acountAssetsRecord.setFee(fee);
-        acountAssetsRecord.setAfterBalance(balance.subtract(deduct));
-        acountAssetsRecord.setStatus(0);
-        acountAssetsRecord.setCurrencyId(withdrawDTO.getCurrencyId());
-        acountAssetsRecord.setBeforeBalance(balance);
-        acountAssetsRecord.setTradeType(TradeType.WITHDRAW.getCode());
-        acountAssetsRecordService.save(acountAssetsRecord);
+        AccountAssetsRecord accountAssetsRecord = new AccountAssetsRecord();
+        accountAssetsRecord.setAssetsId(acountAssets.getId());
+        accountAssetsRecord.setTradeNo(tradeNo);
+        accountAssetsRecord.setAmount(amount);
+        accountAssetsRecord.setFee(fee);
+        accountAssetsRecord.setAfterBalance(balance.subtract(deduct));
+        accountAssetsRecord.setStatus(0);
+        accountAssetsRecord.setCurrencyId(withdrawDTO.getCurrencyId());
+        accountAssetsRecord.setBeforeBalance(balance);
+        accountAssetsRecord.setTradeType(TradeType.WITHDRAW.getCode());
+        accountAssetsRecordService.save(accountAssetsRecord);
         return tradeNo;
     }
 
     public void recharge(AcountRechargeDTO dto) {
-        AccountAssets acountAssets = acountAssetsService.lambdaQuery()
+        AccountAssets acountAssets = accountAssetsService.lambdaQuery()
                 .eq(AccountAssets::getAccountId, dto.getAccountId())
                 .eq(AccountAssets::getAccountType, dto.getAccountType())
                 .eq(AccountAssets::getCurrencyId, dto.getCurrencyEnum().id)
                 .oneOpt().orElseGet(() -> createNewAssets(dto.getAccountId(), dto.getAccountType(), dto.getChainEnum().id ,dto.getCurrencyEnum().id));
         BigDecimal balance = acountAssets.getBalance() == null ? BigDecimal.ZERO : acountAssets.getBalance();
         acountAssets.setBalance(balance.add(dto.getAmount()));
-        acountAssetsService.saveOrUpdate(acountAssets);
+        accountAssetsService.saveOrUpdate(acountAssets);
 
         AccountAssetsRecord acountAssetsRecord = new AccountAssetsRecord();
         acountAssetsRecord.setAssetsId(acountAssets.getId());
@@ -114,10 +100,10 @@ public class AssetsService {
         acountAssetsRecord.setCurrencyId(dto.getCurrencyEnum().id);
         acountAssetsRecord.setBeforeBalance(balance);
         acountAssetsRecord.setTradeType(TradeType.RECHARGE.getCode());
-        acountAssetsRecordService.save(acountAssetsRecord);
+        accountAssetsRecordService.save(acountAssetsRecord);
     }
 
-    public List<AccountAssets> creaateAccountAssets(Long accountId, Integer accountType) {
+    public List<AccountAssets> createAccountAssets(Long accountId, Integer accountType) {
         List<AccountAssets> assetsList = new ArrayList<>();
         CurrencyEnum[] values = CurrencyEnum.values();
         for (CurrencyEnum currencyEnum : values) {
@@ -143,14 +129,14 @@ public class AssetsService {
     }
 
     public void withdrawFinish(String tradeNo) {
-        AccountAssetsRecord acountAssetsRecord = acountAssetsRecordService.lambdaQuery().eq(AccountAssetsRecord::getTradeNo, tradeNo).oneOpt().orElseThrow();
-        acountAssetsRecord.setStatus(0);
-        acountAssetsRecord.setFinishTime(new Date());
-        acountAssetsRecordService.updateById(acountAssetsRecord);
-        Long assetsId = acountAssetsRecord.getAssetsId();
-        BigDecimal amount = acountAssetsRecord.getAmount() == null ? BigDecimal.ZERO : acountAssetsRecord.getAmount();
-        BigDecimal fee = acountAssetsRecord.getFee() == null ? BigDecimal.ZERO : acountAssetsRecord.getFee();
-        AccountAssets assets = acountAssetsService.getById(assetsId);
+        AccountAssetsRecord accountAssetsRecord = accountAssetsRecordService.lambdaQuery().eq(AccountAssetsRecord::getTradeNo, tradeNo).oneOpt().orElseThrow();
+        accountAssetsRecord.setStatus(0);
+        accountAssetsRecord.setFinishTime(new Date());
+        accountAssetsRecordService.updateById(accountAssetsRecord);
+        Long assetsId = accountAssetsRecord.getAssetsId();
+        BigDecimal amount = accountAssetsRecord.getAmount() == null ? BigDecimal.ZERO : accountAssetsRecord.getAmount();
+        BigDecimal fee = accountAssetsRecord.getFee() == null ? BigDecimal.ZERO : accountAssetsRecord.getFee();
+        AccountAssets assets = accountAssetsService.getById(assetsId);
         BigDecimal freezeBalance = assets.getFreezeBalance() == null ? BigDecimal.ZERO : assets.getFreezeBalance();
         assets.setFreezeBalance(freezeBalance.subtract(amount).subtract(fee));
         assets.setUpdateTime(new Date());

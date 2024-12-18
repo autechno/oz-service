@@ -83,7 +83,7 @@ public class UserRegisterService {
         if (!result.getCode().equals(ResultCodeEnum.SUCCESS.getCode())) {
             throw new ServiceRuntimeException(ResultCodeEnum.FAIL.getLabel_zh_cn(), ResultCodeEnum.FAIL.getCode());
         }
-        assetsService.creaateAccountAssets(user.getId(), AccountType.INDIVIDUAL_USER);
+        assetsService.createAccountAssets(user.getId(), AccountType.INDIVIDUAL_USER);
 
         registerDTO.setRelationEmail(user.getEmail());
         registerDTO.setRelationUsername(user.getUsername());

@@ -10,6 +10,12 @@ import com.aucloud.commons.pojo.Result;
 import com.aucloud.commons.pojo.dto.RegisterDTO;
 import com.aucloud.commons.pojo.dto.UserLoginDTO;
 import com.aucloud.commons.utils.IpUtils;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +43,30 @@ public class IndexController {
     @Autowired
     private UserRegisterService userRegisterService;
 
-    @RequestMapping(value = "getAccessKey",method = RequestMethod.GET)
-    public Result<String> getAccessKey(){
+    @Tag(name = "获取AccessKey接口", description = "获取AccessKey接口")
+    @io.swagger.v3.oas.annotations.Operation(summary = "根据ID，查询用户",
+            parameters = {
+                    @Parameter(name = "id", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "成功", content = @Content(mediaType = "application/json", schema = @Schema(implementation = IndexController.class))),
+                    @ApiResponse(responseCode = "400", description = "错误", content = @Content(mediaType = "application/json"))
+            }
+    )
+    @RequestMapping(value = "getAccessKey", method = RequestMethod.GET)
+    public Result<String> getAccessKey() {
         String ipAddress = IpUtils.getIpAddress();
         Object o = redisTemplate.opsForValue().get(ipAddress + "-accessKey");
         StringBuilder key = new StringBuilder(Objects.toString(o, ""));
-        if(StringUtils.isBlank(key.toString())){
+        if (StringUtils.isBlank(key.toString())) {
             Random random = new Random();
-            int keyNum = random.nextInt(90000)+10000;
+            int keyNum = random.nextInt(90000) + 10000;
             key.append(keyNum);
             for (int i = 0; i < 5; i++) {
                 int ascall = random.nextInt(25) + 65;
                 key.append((char) ascall);
             }
-            redisTemplate.opsForValue().set(ipAddress + "-accessKey", key.toString(),1, TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(ipAddress + "-accessKey", key.toString(), 1, TimeUnit.DAYS);
         }
         return Result.returnResult(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getLabel_zh_cn(), key.toString());
     }

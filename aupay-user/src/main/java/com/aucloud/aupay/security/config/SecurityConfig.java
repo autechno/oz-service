@@ -54,6 +54,21 @@ public class SecurityConfig {
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/auth/**", "/oauth2/**")
                         .permitAll()
+                        .requestMatchers("/*",
+                                "/error",
+                                "/favicon.ico",
+                                "/**.png",
+                                "/**.gif",
+                                "/**.svg",
+                                "/**.jpg",
+                                "/**.html",
+                                "/**.css",
+                                "/**.js")
+                        .permitAll()
+                        .requestMatchers("/swagger-ui/**",
+                                "/swagger-resources/*",
+                                "/v3/api-docs/**")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login()
