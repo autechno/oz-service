@@ -7,7 +7,7 @@ import com.aucloud.aupay.user.orm.po.AupayUser;
 import com.aucloud.aupay.user.orm.service.AupayUserService;
 import com.aucloud.aupay.user.service.UserRegisterService;
 import com.aucloud.commons.constant.AuthProvider;
-import com.aucloud.commons.exception.OAuth2AuthenticationProcessingException;
+import com.aucloud.aupay.security.OAuth2AuthenticationProcessingException;
 import com.aucloud.commons.pojo.dto.RegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

@@ -1,7 +1,7 @@
 package com.aucloud.aupay.security.oauth2.user;
 
 import com.aucloud.commons.constant.AuthProvider;
-import com.aucloud.commons.exception.OAuth2AuthenticationProcessingException;
+import com.aucloud.aupay.security.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 

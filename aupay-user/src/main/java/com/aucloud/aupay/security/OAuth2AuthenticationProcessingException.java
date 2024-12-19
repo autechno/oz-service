@@ -1,4 +1,4 @@
-package com.aucloud.commons.exception;
+package com.aucloud.aupay.security;
 
 import org.springframework.security.core.AuthenticationException;
 
